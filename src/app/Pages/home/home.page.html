@@ -1,11 +1,13 @@
 <ion-header>
-    <ion-toolbar>
-      <ion-title>Header</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
+  <ion-toolbar>
+    <ion-title>Usuarios y Grupos</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="ion-padding">
+
+  <!-- Sección Usuarios -->
+  <h2>Usuarios</h2>
   <ion-card *ngFor="let item of items; trackBy: trackById">
     <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
     <ion-card-header>
@@ -17,5 +19,11 @@
       Nombre: {{ item.first_name }} {{ item.last_name }}
     </ion-card-content>
   </ion-card>
-</ion-content>
 
+  <!-- Sección Grupos -->
+  <h2>Grupos</h2>
+  <ion-card *ngFor="let grupo of grupos; trackBy: trackById">
+    <ion-card-header>
+      <ion-card-title>{{ grupo.name }}</ion-card-title>
+      <!-- Si tienes más campos en grupos, puedes mostrarlos aquí -->
+    </ion-card-header>
