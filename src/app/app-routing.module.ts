@@ -1,21 +1,28 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { RoleGuard } from './guards/role.guard';
 
 const routes: Routes = [
   {
-    path: 'home',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./Pages/home/home.module').then( m => m.HomePageModule)
-  },
-  {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login', // Redirige al login
     pathMatch: 'full'
   },
   {
+    path: 'panelusuarios',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] }, // Solo usuarios con rol "Admin" pueden acceder
+    loadChildren: () => import('./Pages/panelusuarios/panelusuarios.module').then(m => m.PanelusuariosPageModule)
+  },
+  {
     path: 'login',
-    loadChildren: () => import('./Pages/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./Pages/login/login.module').then(m => m.LoginPageModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./Pages/home/home.module').then(m => m.HomePageModule),
+    canActivate: [AuthGuard]
   },
 ];
 

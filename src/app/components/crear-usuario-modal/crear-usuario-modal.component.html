@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crear usuario</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="crearUsuario()">
+    <ion-item>
+      <ion-label position="floating">Nombre de usuario</ion-label>
+      <ion-input [(ngModel)]="usuario.username" name="username" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" [(ngModel)]="usuario.email" name="email" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input [(ngModel)]="usuario.first_name" name="first_name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Apellido</ion-label>
+      <ion-input [(ngModel)]="usuario.last_name" name="last_name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input type="password" [(ngModel)]="usuario.password" name="password" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Cargo</ion-label>
+      <ion-input [(ngModel)]="usuario.cargo" name="cargo"></ion-input>
+    </ion-item>
+<ion-item>
+  <ion-label>Rol (Grupo)</ion-label>
+  <ion-select [(ngModel)]="usuario.grupoSeleccionado" name="grupoSeleccionado" required>
+    <ion-select-option *ngFor="let grupo of grupos" [value]="grupo.name">{{ grupo.name }}</ion-select-option>
+  </ion-select>
+</ion-item>
+    <ion-button expand="block" type="submit" color="primary">Guardar</ion-button>
+  </form>
+</ion-content>

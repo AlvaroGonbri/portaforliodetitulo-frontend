@@ -1,19 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { users } from 'src/app/models/user.interface';
+import { groups } from 'src/app/models/user.interface';
+import { userProfile } from 'src/app/models/user.interface';
 
-export interface users {
-  id: number;
-  username: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-}
-
-export interface groups {
-  "id": number,
-  "name": string
-}
 
 @Injectable({
   providedIn: 'root'
@@ -42,4 +33,27 @@ export class APIService {
 
     return this.http.get<groups[]>(this.urlGroups, { headers });
   }
+
+  crearUsuario(usuario: any): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.post(this.urlUsers, usuario, { headers });
+}
+
+eliminarUsuario(id: number): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.delete(`${this.urlUsers}${id}/`, { headers });
+}
+
+editarUsuario(id: number, usuario: any): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.put(`${this.urlUsers}${id}/`, usuario, { headers });
+}
+
+
 }

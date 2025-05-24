@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Panel de usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Botón de logout -->
+  <ion-button (click)="logout()" expand="block" color="danger" style="margin: 16px 16px 8px 16px;">
+    <ion-icon slot="start" name="log-out"></ion-icon>
+    Cerrar sesión
+  </ion-button>
+
+  <!-- Botón de actualizar -->
+  <ion-button (click)="actualizarUsuarios()" expand="block" style="margin: 8px 16px;">
+    <ion-icon slot="start" name="refresh"></ion-icon>
+    Actualizar usuarios
+  </ion-button>
+
+  <!-- Botón de crear usuario -->
+  <ion-button (click)="crearUsuario()" expand="block" color="success" style="margin: 8px 16px 16px 16px;">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Crear usuario
+  </ion-button>
+
+  <!-- Tabla de usuarios -->
+  <ion-card style="margin: 16px;">
+    <ion-card-content>
+      <table>
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Roles</th>
+            <th>Cargo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items; trackBy: trackById">
+            <td>{{ item.username }}</td>
+            <td>{{ getRolesNames(item.groups) }}</td>
+            <td>{{ item.profile?.cargo || '-' }}</td>
+            <td style="text-align: center;">
+              <ion-button (click)="eliminarUsuario(item.id)" color="danger" size="small">
+                <ion-icon name="trash"></ion-icon>
+              </ion-button>
+            </td>
+            <td>
+              <ion-button (click)="editarUsuario(item)" color="warning" size="small">
+                <ion-icon name="create"></ion-icon>
+                </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
