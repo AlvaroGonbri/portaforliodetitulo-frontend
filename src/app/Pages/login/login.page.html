@@ -1,50 +1,49 @@
-<ion-content class="ion-padding">
-  <ion-grid>
-    <ion-row justify-content-center>
-      <ion-col size-md="6" size-lg="4" size-xs="12">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Iniciar Sesión</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <form #form="ngForm" (ngSubmit)="login(form)">
-              <ion-item>
-                <ion-label position="floating">Usuario</ion-label>
-                <ion-input
-                  name="username"
-                  type="text"
-                  required
-                  ngModel
-                  autocomplete="username"
-                ></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="floating">Contraseña</ion-label>
-                <ion-input
-                  name="password"
-                  type="password"
-                  required
-                  ngModel
-                  autocomplete="current-password"
-                ></ion-input>
-              </ion-item>
-              <div class="ion-text-center" style="margin-top: 16px;">
-                <ion-button
-                  expand="block"
-                  type="submit"
-                  [disabled]="form.invalid"
-                  color="primary"
-                >
-                  Entrar
-                </ion-button>
-              </div>
-            </form>
-            <div *ngIf="errorMessage" class="ion-text-center" style="color: red; margin-top: 12px;">
-              {{ errorMessage }}
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+<ion-content class="login-bg">
+  <div class="login-center">
+    <div class="login-card">
+      <div class="login-avatar">
+        <ion-icon name="person" size="large"></ion-icon>
+      </div>
+      <form #form="ngForm" (ngSubmit)="login(form)">
+        <ion-item lines="none" class="login-input">
+          <ion-icon name="person" slot="start"></ion-icon>
+          <ion-input
+            name="username"
+            type="text"
+            required
+            ngModel
+            autocomplete="username"
+            placeholder="Email ID"
+          ></ion-input>
+        </ion-item>
+        <ion-item lines="none" class="login-input">
+          <ion-icon name="lock-closed" slot="start"></ion-icon>
+          <ion-input
+            name="password"
+            type="password"
+            required
+            ngModel
+            autocomplete="current-password"
+            placeholder="Password"
+          ></ion-input>
+        </ion-item>
+        <div class="login-options">
+          <ion-checkbox name="remember" ngModel></ion-checkbox>
+          <span class="remember-text">Remember me</span>
+        </div>
+        <ion-button
+          expand="block"
+          type="submit"
+          [disabled]="form.invalid"
+          color="danger"
+          class="login-btn"
+        >
+          LOGIN
+        </ion-button>
+        <div *ngIf="errorMessage" class="ion-text-center" style="color: red; margin-top: 12px;">
+          {{ errorMessage }}
+        </div>
+      </form>
+    </div>
+  </div>
 </ion-content>

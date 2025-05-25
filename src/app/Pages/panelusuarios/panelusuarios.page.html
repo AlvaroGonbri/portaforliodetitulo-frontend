@@ -1,54 +1,54 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Panel de usuarios</ion-title>
+    <ion-title>
+      <h1 style="margin: 0;">Panel de usuarios</h1>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <!-- Botón de logout -->
-  <ion-button (click)="logout()" expand="block" color="danger" style="margin: 16px 16px 8px 16px;">
-    <ion-icon slot="start" name="log-out"></ion-icon>
-    Cerrar sesión
-  </ion-button>
-
-  <!-- Botón de actualizar -->
-  <ion-button (click)="actualizarUsuarios()" expand="block" style="margin: 8px 16px;">
-    <ion-icon slot="start" name="refresh"></ion-icon>
-    Actualizar usuarios
-  </ion-button>
-
-  <!-- Botón de crear usuario -->
-  <ion-button (click)="crearUsuario()" expand="block" color="success" style="margin: 8px 16px 16px 16px;">
-    <ion-icon slot="start" name="add"></ion-icon>
-    Crear usuario
-  </ion-button>
+  <!-- Botones Crear y Actualizar en la esquina superior izquierda -->
+  <div style="display: flex; gap: 8px; margin: 16px 0 0 16px;">
+    <ion-button (click)="crearUsuario()" color="success">
+      <ion-icon slot="start" name="add"></ion-icon>
+      Crear usuario
+    </ion-button>
+    <ion-button (click)="actualizarUsuarios()">
+      <ion-icon slot="start" name="refresh"></ion-icon>
+      Actualizar
+    </ion-button>
+  </div>
 
   <!-- Tabla de usuarios -->
   <ion-card style="margin: 16px;">
     <ion-card-content>
-      <table>
+      <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
         <thead>
           <tr>
-            <th>Usuario</th>
-            <th>Roles</th>
-            <th>Cargo</th>
-            <th>Acciones</th>
+            <th style="padding: 12px 20px;">Usuario</th>
+            <th style="padding: 12px 20px;">email</th>
+            <th style="padding: 12px 20px;">Rol</th>
+            <th style="padding: 12px 20px;">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of items; trackBy: trackById">
-            <td>{{ item.username }}</td>
-            <td>{{ getRolesNames(item.groups) }}</td>
-            <td>{{ item.profile?.cargo || '-' }}</td>
-            <td style="text-align: center;">
+            <td style="padding: 10px 20px;">{{ item.username }} {{ item.last_name }}</td>
+            <td style="padding: 10px 20px;">{{ item.email }}</td>
+            <td style="padding: 10px 20px;">{{ getRolesNames(item.groups) }}</td>
+            <td style="text-align: center; padding: 10px 20px;">
               <ion-button (click)="eliminarUsuario(item.id)" color="danger" size="small">
                 <ion-icon name="trash"></ion-icon>
               </ion-button>
-            </td>
-            <td>
-              <ion-button (click)="editarUsuario(item)" color="warning" size="small">
+              <ion-button (click)="editarUsuario(item)" color="warning" size="small" style="margin-left: 8px;">
                 <ion-icon name="create"></ion-icon>
-                </ion-button>
+              </ion-button>
             </td>
           </tr>
         </tbody>
