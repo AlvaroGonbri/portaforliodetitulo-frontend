@@ -13,6 +13,6 @@ export interface users {
   email: string;
   first_name: string;
   last_name: string;
-  groups: groups[];
+  groups: { id: number; name: string }[];
   profile: userProfile | null;
 }

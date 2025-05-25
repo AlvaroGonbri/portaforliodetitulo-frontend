@@ -17,27 +17,37 @@ export class CrearUsuarioModalComponent implements OnInit {
     private apiService: APIService
   ) {}
 
-  ngOnInit() {
-    // Si no se pasa un usuario, inicializa uno nuevo
-    if (!this.usuario) {
-      this.usuario = {
-        username: '',
-        email: '',
-        first_name: '',
-        last_name: '',
-        password: '',
-        cargo: '',
-        grupoSeleccionado: null
-      };
-    }
-    // Si no se pasan grupos, carga los grupos
-    if (!this.grupos || this.grupos.length === 0) {
-      this.apiService.getgroups().subscribe({
-        next: (grupos) => { this.grupos = grupos; },
-        error: (err) => { console.error('Error al obtener grupos', err); }
-      });
-    }
+ngOnInit() {
+  // Si no se pasa un usuario, inicializa uno nuevo
+  if (!this.usuario) {
+    this.usuario = {
+      username: '',
+      email: '',
+      first_name: '',
+      last_name: '',
+      password: '',
+      cargo: '',
+      grupoSeleccionado: null
+    };
   }
+  // Si el usuario tiene grupos, inicializa el grupo seleccionado
+  // Si groups es un array de objetos {id, name}
+  if (this.usuario.groups && this.usuario.groups.length > 0) {
+    // Si es edición y groups es array de objetos
+    this.usuario.grupoSeleccionado = this.usuario.groups[0].id;
+    // Si fuera array de IDs, sería: this.usuario.grupoSeleccionado = this.usuario.groups[0];
+  } else {
+    this.usuario.grupoSeleccionado = null;
+  }
+  // Si no se pasan grupos, carga los grupos
+  if (!this.grupos || this.grupos.length === 0) {
+    this.apiService.getgroups().subscribe({
+      next: (grupos) => { this.grupos = grupos; },
+      error: (err) => { console.error('Error al obtener grupos', err); }
+    });
+  }
+}
+
 
   dismiss() {
     this.modalController.dismiss();
@@ -46,9 +56,12 @@ export class CrearUsuarioModalComponent implements OnInit {
   crearUsuario() {
     const usuarioParaEnviar = {
       ...this.usuario,
-      groups: [this.usuario.grupoSeleccionado],
+      groups_ids: [this.usuario.grupoSeleccionado],
       profile: { cargo: this.usuario.cargo }
     };
+    if (!usuarioParaEnviar.password) {
+  delete usuarioParaEnviar.password;
+}
     // Si el usuario tiene id, es una edición
     if (this.usuario.id) {
       this.apiService.editarUsuario(this.usuario.id, usuarioParaEnviar).subscribe({

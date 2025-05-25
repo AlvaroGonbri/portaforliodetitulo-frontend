@@ -20,12 +20,11 @@ export class PanelusuariosPage implements OnInit {
   items: users[] = [];
   grupos: groups[] = [];
 
-  getRolesNames(groups: { name: string }[]): string {
-  if (!groups || groups.length === 0) {
-    return '-';
-  }
+getRolesNames(groups: {id: number, name: string}[]): string {
+  if (!groups || groups.length === 0) return '-';
   return groups.map(g => g.name).join(', ');
 }
+
 
   constructor(
     private servicioAPI: APIService,
@@ -134,7 +133,7 @@ async editarUsuario(usuario: any) {
   const modal = await this.modalController.create({
     component: CrearUsuarioModalComponent,
     componentProps: {
-      usuario: usuario,
+      usuario: JSON.parse(JSON.stringify(usuario)), // deep copy
       grupos: this.grupos
     }
   });
@@ -142,10 +141,10 @@ async editarUsuario(usuario: any) {
 
   const { data } = await modal.onDidDismiss();
   if (data) {
-    
-    this.cargarUsuarios();
+    this.cargarUsuarios(); // Solo actualiza si guardaste
   }
 }
+
 
 
   

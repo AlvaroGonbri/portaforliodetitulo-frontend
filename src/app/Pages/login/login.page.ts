@@ -42,14 +42,17 @@ ngOnInit() {
     const loading = await this.loadingCtrl.create({ message: 'Iniciando sesión...' });
     await loading.present();
 
-    this.authService.login(username, password).subscribe({
+this.authService.login(username, password).subscribe({
       next: () => {
         this.authService.getUserProfile().subscribe({
           next: (user) => {
-            const roles = user.groups.map((g: { name: string }) => g.name);
-            localStorage.setItem('roles', JSON.stringify(roles));
+            // user.groups es un array de objetos: [{ id: 2, name: "Admin" }]
+            const groupName = user.groups[0]?.name || ''; // Solo el primer grupo, por ejemplo
+            // Si quieres todos los nombres:
+            // const groupNames = user.groups.map(g => g.name);
+            localStorage.setItem('roles', JSON.stringify(groupName)); // Guarda solo el nombre
             loading.dismiss();
-            this.router.navigate(['/home']); // Cambia '/home' por la ruta que prefieras
+            this.router.navigate(['/home']);
           },
           error: (err) => {
             loading.dismiss();

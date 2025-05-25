@@ -15,8 +15,19 @@
     </ion-item>
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="usuario.email" name="email" required></ion-input>
+      <ion-input
+        type="email"
+        [(ngModel)]="usuario.email"
+        name="email"
+        #email="ngModel"
+        required
+        email
+      ></ion-input>
     </ion-item>
+    <ion-note *ngIf="email.invalid && (email.dirty || email.touched)" color="danger">
+      <span *ngIf="email.errors?.['required']">El correo es obligatorio</span>
+      <span *ngIf="email.errors?.['email']">Formato de correo inválido</span>
+    </ion-note>
     <ion-item>
       <ion-label position="floating">Nombre</ion-label>
       <ion-input [(ngModel)]="usuario.first_name" name="first_name"></ion-input>
@@ -25,20 +36,35 @@
       <ion-label position="floating">Apellido</ion-label>
       <ion-input [(ngModel)]="usuario.last_name" name="last_name"></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-label position="floating">Contraseña</ion-label>
-      <ion-input type="password" [(ngModel)]="usuario.password" name="password" required></ion-input>
-    </ion-item>
+<ion-item>
+  <ion-label position="floating">Contraseña</ion-label>
+  <ion-input
+    type="password"
+    [(ngModel)]="usuario.password"
+    name="password"
+    #password="ngModel"
+    required
+    minlength="8"
+  ></ion-input>
+</ion-item>
+<ion-note *ngIf="password.invalid && (password.dirty || password.touched)" color="danger">
+  <span *ngIf="password.errors?.['required']">La contraseña es obligatoria</span>
+  <span *ngIf="password.errors?.['minlength']">La contraseña no cumple los requisitos</span>
+</ion-note>
+
+    <ion-note *ngIf="password.invalid && (password.dirty || password.touched)" color="danger">
+      <span *ngIf="password.errors?.['required']">La contraseña es obligatoria</span>
+      <span *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</span>
+    </ion-note>
     <ion-item>
       <ion-label position="floating">Cargo</ion-label>
       <ion-input [(ngModel)]="usuario.cargo" name="cargo"></ion-input>
     </ion-item>
-<ion-item>
-  <ion-label>Rol (Grupo)</ion-label>
-  <ion-select [(ngModel)]="usuario.grupoSeleccionado" name="grupoSeleccionado" required>
-    <ion-select-option *ngFor="let grupo of grupos" [value]="grupo.name">{{ grupo.name }}</ion-select-option>
-  </ion-select>
-</ion-item>
+    <ion-select [(ngModel)]="usuario.grupoSeleccionado" name="grupoSeleccionado" required>
+      <ion-select-option *ngFor="let grupo of grupos" [value]="grupo.id">
+        {{ grupo.name }}
+      </ion-select-option>
+    </ion-select>
     <ion-button expand="block" type="submit" color="primary">Guardar</ion-button>
   </form>
 </ion-content>

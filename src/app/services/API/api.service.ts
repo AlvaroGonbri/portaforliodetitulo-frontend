@@ -52,7 +52,7 @@ editarUsuario(id: number, usuario: any): Observable<any> {
   const headers = new HttpHeaders({
     'Authorization': `Token ${this.apiKey}`
   });
-  return this.http.put(`${this.urlUsers}${id}/`, usuario, { headers });
+  return this.http.patch(`${this.urlUsers}${id}/`, usuario, { headers });
 }
 
 

@@ -10,7 +10,7 @@ export class MenuService {
   {
     title: 'Gestion de Usuarios',
     url: '/panelusuarios',
-    icon: 'panelusuarios',
+    icon: 'panelusuarios.svg',
     allowedRoles: ['Admin']
   },
   ];
