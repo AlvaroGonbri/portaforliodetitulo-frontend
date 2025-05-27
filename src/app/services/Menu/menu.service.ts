@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,15 @@ export class MenuService {
     icon: 'panelusuarios.svg',
     allowedRoles: ['Admin']
   },
+  {
+    title: 'Gestion de Inventario',
+    url: '/gestion-inventario',
+    icon: '/gestioninventario.svg',
+    allowedRoles: ['Admin']
+  }
   ];
+
+
 
   constructor() { }
   getUserPages(userRoles: string[]): any[] {

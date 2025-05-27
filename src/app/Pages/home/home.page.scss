@@ -1,7 +1,15 @@
-.login-gradient-bg {
-  --background: none;
-  background: radial-gradient(circle at 70% 20%, #e74c3c 0%, #c0392b 30%, #8e44ad 60%, #222 100%);
-  min-height: 100vh;
+.roles-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.roles-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.roles-header p {
+  color: #555;
+  font-size: 1.1rem;
 }
 
 .custom-toolbar {
@@ -30,15 +38,16 @@ ion-item {
   margin-bottom: 12px;
   transition: background 0.2s;
 }
-ion-item:hover {
-  background: rgba(231, 76, 60, 0.25);
-}
 
-ion-icon {
-  color: #e74c3c;
-}
-
-ion-label {
-  color: #fff;
-  font-size: 1.1em;
+@media (max-width: 600px) {
+  .roles-header h1 {
+    font-size: 1.4rem;
+  }
+  .roles-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .role-card {
+    padding: 18px 12px;
+  }
 }

@@ -36,10 +36,67 @@ ion-button[color="light"] {
   --border-radius: 8px;
   font-weight: bold;
 }
-.logout-btn {
-  --background: rgba(255,255,255,0.25);
-  --color: #8f1b1b;
-  font-weight: bold;
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
   border-radius: 8px;
-  backdrop-filter: blur(2px);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(45, 92, 136, 0.08);
 }
+
+.users-table th {
+  background: #2D5C88;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.users-table td {
+  padding: 0.75rem 1rem;
+  color: #333333;
+  border-bottom: 1px solid #F5F6FA;
+}
+
+.users-table tr:last-child td {
+  border-bottom: none;
+}
+
+.edit-link {
+  color: #31EC56;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.delete-link {
+  color: #E94823;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.divider {
+  color: #333333;
+  margin: 0 0.5rem;
+}
+
+@media (max-width: 700px) {
+  .users-title-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .main-title {
+    font-size: 1.5rem;
+    text-align: left;
+  }
+  .btn-outline-primary {
+    width: 100%;
+  }
+  .users-table th, .users-table td {
+    padding: 0.5rem 0.3rem;
+    font-size: 0.95rem;
+  }
+}
+

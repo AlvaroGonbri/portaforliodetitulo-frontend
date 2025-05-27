@@ -1,0 +1,16 @@
+<ion-list>
+  <ion-button (click)="logout()" expand="block" color="danger" style="margin: 16px 16px 8px 16px;">
+    <ion-icon slot="start" name="log-out"></ion-icon>
+    Cerrar sesión
+  </ion-button>
+  <ion-item *ngFor="let producto of productos">
+    <ion-label>
+      <h2>{{ producto.nom_producto }}</h2>
+      <p>Código: {{ producto.cod_material }}</p>
+      <p>Stock: {{ producto.cant_existencia }}</p>
+      <p>Categoría: {{ producto.categoria.nom_categoria }}</p>
+    </ion-label>
+    <ion-button (click)="editarProducto(producto)">Editar</ion-button>
+    <ion-button color="danger" slot="end" (click)="eliminarProducto(producto.id)">Eliminar</ion-button>
+  </ion-item>
+</ion-list>
