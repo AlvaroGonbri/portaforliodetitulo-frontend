@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { APIService } from '../../services/API/api.service';
 import { AlertController } from '@ionic/angular';
 
@@ -19,7 +19,11 @@ export class CrearUsuarioModalComponent implements OnInit {
   constructor(
     private modalController: ModalController,
     private apiService: APIService,
+<<<<<<< HEAD
     private alertCtrl: AlertController
+=======
+    private toastController: ToastController
+>>>>>>> 304ff261aa42335b21c4de64357d9bb487f43bea
   ) {}
 
   ngOnInit() {
@@ -55,6 +59,7 @@ export class CrearUsuarioModalComponent implements OnInit {
     this.modalController.dismiss();
   }
 
+<<<<<<< HEAD
   // Método para cambiar la contraseña de otro usuario (solo nueva contraseña)
   async cambiarPasswordOtroUsuario() {
     if (this.usuario.id && this.new_password) {
@@ -84,6 +89,19 @@ export class CrearUsuarioModalComponent implements OnInit {
   // Método para crear o editar usuario
   async crearUsuario() {
     // Preparar el objeto usuario para enviar al backend
+=======
+  async mostrarToastExito() {
+    const toast = await this.toastController.create({
+      message: 'Usuario guardado con éxito',
+      duration: 2000,
+      color: 'success',
+      position: 'top'
+    });
+    await toast.present();
+  }
+
+  crearUsuario() {
+>>>>>>> 304ff261aa42335b21c4de64357d9bb487f43bea
     const usuarioParaEnviar = {
       ...this.usuario,
       groups_ids: [this.usuario.grupoSeleccionado],
@@ -93,11 +111,15 @@ export class CrearUsuarioModalComponent implements OnInit {
     if (!usuarioParaEnviar.password) {
       delete usuarioParaEnviar.password;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 304ff261aa42335b21c4de64357d9bb487f43bea
     // Si el usuario tiene id, es una edición
     if (this.usuario.id) {
       this.apiService.editarUsuario(this.usuario.id, usuarioParaEnviar).subscribe({
-        next: (respuesta) => {
+        next: async (respuesta) => {
+          await this.mostrarToastExito();
           this.modalController.dismiss(usuarioParaEnviar);
         },
         error: (err) => {
@@ -107,7 +129,8 @@ export class CrearUsuarioModalComponent implements OnInit {
     } else {
       // Si no tiene id, es una creación
       this.apiService.crearUsuario(usuarioParaEnviar).subscribe({
-        next: (respuesta) => {
+        next: async (respuesta) => {
+          await this.mostrarToastExito();
           this.modalController.dismiss(usuarioParaEnviar);
         },
         error: (err) => {

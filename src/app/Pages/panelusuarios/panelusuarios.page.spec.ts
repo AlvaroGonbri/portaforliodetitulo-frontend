@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { HomePage } from '../../services/panelusuarios.page';
+import { PanelusuariosPage } from './panelusuarios.page';
 
-describe('HomePage', () => {
-  let component: HomePage;
-  let fixture: ComponentFixture<HomePage>;
+describe('PanelusuariosPage', () => {
+  let component: PanelusuariosPage;
+  let fixture: ComponentFixture<PanelusuariosPage>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HomePage],
+      declarations: [PanelusuariosPage],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HomePage);
+    fixture = TestBed.createComponent(PanelusuariosPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

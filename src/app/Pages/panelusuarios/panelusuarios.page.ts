@@ -5,7 +5,10 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { users, groups } from '../../models/user.interface';
 import { ModalController, AlertController, ToastController } from '@ionic/angular';
 import { CrearUsuarioModalComponent } from 'src/app/components/crear-usuario-modal/crear-usuario-modal.component';
+<<<<<<< HEAD
 import { LogoutService } from 'src/app/services/logout/logout.service';
+=======
+>>>>>>> 304ff261aa42335b21c4de64357d9bb487f43bea
 
 @Component({
   selector: 'app-panelusuarios',
@@ -29,8 +32,12 @@ export class PanelusuariosPage implements OnInit {
     private modalController: ModalController,
     private alertController: AlertController,
     private router: Router,
+<<<<<<< HEAD
     private toastController: ToastController, // Agregado para mostrar mensajes toast
     private logoutService : LogoutService
+=======
+    private toastController: ToastController // Agregado para mostrar mensajes toast
+>>>>>>> 304ff261aa42335b21c4de64357d9bb487f43bea
   ) { }
 
   ngOnInit(): void {
@@ -74,9 +81,15 @@ export class PanelusuariosPage implements OnInit {
   }
 
   logout(): void {
+<<<<<<< HEAD
   this.logoutService.logout();
 }
 
+=======
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
+>>>>>>> 304ff261aa42335b21c4de64357d9bb487f43bea
 
   actualizarUsuarios(): void {
     localStorage.removeItem('usuarios');

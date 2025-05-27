@@ -8,6 +8,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+<<<<<<< HEAD
   <ion-card>
     <ion-card-content>
       <form (ngSubmit)="crearUsuario()">
@@ -93,4 +94,59 @@
       </div>
     </ion-card-content>
   </ion-card>
+=======
+  <form (ngSubmit)="crearUsuario()">
+    <ion-item style="margin-bottom: 18px;">
+      <ion-label position="floating">Nombre de usuario</ion-label>
+      <ion-input [(ngModel)]="usuario.username" name="username" required></ion-input>
+    </ion-item>
+    <ion-item style="margin-bottom: 18px;">
+      <ion-label position="floating">Correo electrónico</ion-label>
+      <ion-input
+        type="email"
+        [(ngModel)]="usuario.email"
+        name="email"
+        #email="ngModel"
+        required
+        email
+      ></ion-input>
+    </ion-item>
+    <ion-note *ngIf="email.invalid && (email.dirty || email.touched)" color="danger" style="margin-bottom: 18px; display: block;">
+      <span *ngIf="email.errors?.['required']">El correo es obligatorio</span>
+      <span *ngIf="email.errors?.['email']">Formato de correo inválido</span>
+    </ion-note>
+    <ion-item style="margin-bottom: 18px;">
+      <ion-label position="floating">Nombre</ion-label>
+      <ion-input [(ngModel)]="usuario.first_name" name="first_name"></ion-input>
+    </ion-item>
+    <ion-item style="margin-bottom: 18px;">
+      <ion-label position="floating">Apellido</ion-label>
+      <ion-input [(ngModel)]="usuario.last_name" name="last_name"></ion-input>
+    </ion-item>
+    <ion-item style="margin-bottom: 18px;">
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input
+        type="password"
+        [(ngModel)]="usuario.password"
+        name="password"
+        #password="ngModel"
+        required
+        minlength="8"
+      ></ion-input>
+    </ion-item>
+    <ion-note *ngIf="password.invalid && (password.dirty || password.touched)" color="danger" style="margin-bottom: 18px; display: block;">
+      <span *ngIf="password.errors?.['required']">La contraseña es obligatoria</span>
+      <span *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</span>
+    </ion-note>
+    <ion-item style="margin-bottom: 18px;">
+      <ion-label>Rol</ion-label>
+      <ion-select [(ngModel)]="usuario.grupoSeleccionado" name="grupoSeleccionado" placeholder="Selecciona un rol" required>
+        <ion-select-option *ngFor="let grupo of grupos" [value]="grupo.id">
+          {{ grupo.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button expand="block" type="submit" color="primary">Guardar</ion-button>
+  </form>
+>>>>>>> 304ff261aa42335b21c4de64357d9bb487f43bea
 </ion-content>
