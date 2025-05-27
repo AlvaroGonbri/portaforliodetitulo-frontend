@@ -2,12 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { APIService } from 'src/app/services/API/api.service';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { users, groups  } from '../../models/user.interface';
-import { ModalController } from '@ionic/angular';
+import { users, groups } from '../../models/user.interface';
+import { ModalController, AlertController, ToastController } from '@ionic/angular';
 import { CrearUsuarioModalComponent } from 'src/app/components/crear-usuario-modal/crear-usuario-modal.component';
-import { AlertController } from '@ionic/angular';
-
-
+import { LogoutService } from 'src/app/services/logout/logout.service';
 
 @Component({
   selector: 'app-panelusuarios',
@@ -20,20 +18,20 @@ export class PanelusuariosPage implements OnInit {
   items: users[] = [];
   grupos: groups[] = [];
 
-getRolesNames(groups: {id: number, name: string}[]): string {
-  if (!groups || groups.length === 0) return '-';
-  return groups.map(g => g.name).join(', ');
-}
-
+  getRolesNames(groups: { id: number, name: string }[]): string {
+    if (!groups || groups.length === 0) return '-';
+    return groups.map(g => g.name).join(', ');
+  }
 
   constructor(
     private servicioAPI: APIService,
     private authService: AuthenticationService,
     private modalController: ModalController,
     private alertController: AlertController,
-    
-  private router: Router
-) {}
+    private router: Router,
+    private toastController: ToastController, // Agregado para mostrar mensajes toast
+    private logoutService : LogoutService
+  ) { }
 
   ngOnInit(): void {
     this.cargarUsuarios();
@@ -74,15 +72,16 @@ getRolesNames(groups: {id: number, name: string}[]): string {
   trackById(index: number, item: users | groups): number {
     return item.id;
   }
-    logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
+
+  logout(): void {
+  this.logoutService.logout();
+}
+
 
   actualizarUsuarios(): void {
-  localStorage.removeItem('usuarios');
-  this.cargarUsuarios();
-}
+    localStorage.removeItem('usuarios');
+    this.cargarUsuarios();
+  }
 
   async crearUsuario() {
     const modal = await this.modalController.create({
@@ -100,54 +99,61 @@ getRolesNames(groups: {id: number, name: string}[]): string {
   }
 
   async eliminarUsuario(id: number) {
-  const alert = await this.alertController.create({
-    header: '¿Eliminar usuario?',
-    message: '¿Estás seguro de que quieres eliminar este usuario?',
-    buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel'
-      },
-      {
-        text: 'Eliminar',
-        handler: () => {
-          this.servicioAPI.eliminarUsuario(id).subscribe({
-            next: () => {
-              // Elimina el usuario de la lista local
-              this.items = this.items.filter(u => u.id !== id);
-              // Opcional: actualiza localStorage
-              localStorage.setItem('usuarios', JSON.stringify(this.items));
-            },
-            error: (err) => {
-              console.error('Error al eliminar usuario', err);
-            }
-          });
+    const alert = await this.alertController.create({
+      header: '¿Eliminar usuario?',
+      message: '¿Estás seguro de que quieres eliminar este usuario?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.servicioAPI.eliminarUsuario(id).subscribe({
+              next: () => {
+                // Elimina el usuario de la lista local
+                this.items = this.items.filter(u => u.id !== id);
+                // Opcional: actualiza localStorage
+                localStorage.setItem('usuarios', JSON.stringify(this.items));
+              },
+              error: (err) => {
+                console.error('Error al eliminar usuario', err);
+              }
+            });
+          }
         }
+      ]
+    });
+    await alert.present();
+  }
+
+  async editarUsuario(usuario: any) {
+    const modal = await this.modalController.create({
+      component: CrearUsuarioModalComponent,
+      componentProps: {
+        usuario: JSON.parse(JSON.stringify(usuario)), // deep copy
+        grupos: this.grupos
       }
-    ]
-  });
-  await alert.present();
-}
+    });
+    await modal.present();
 
-async editarUsuario(usuario: any) {
-  const modal = await this.modalController.create({
-    component: CrearUsuarioModalComponent,
-    componentProps: {
-      usuario: JSON.parse(JSON.stringify(usuario)), // deep copy
-      grupos: this.grupos
+    const { data } = await modal.onDidDismiss();
+    if (data) {
+      // Actualiza solo el usuario editado en el array items
+      const idx = this.items.findIndex(u => u.id === data.id);
+      if (idx !== -1) {
+        this.items[idx] = { ...this.items[idx], ...data };
+        localStorage.setItem('usuarios', JSON.stringify(this.items));
+      }
+      // Mostrar toast de éxito
+      const toast = await this.toastController.create({
+        message: 'Usuario actualizado exitosamente',
+        duration: 2000,
+        color: 'success',
+        position: 'top'
+      });
+      await toast.present();
     }
-  });
-  await modal.present();
-
-  const { data } = await modal.onDidDismiss();
-  if (data) {
-    this.cargarUsuarios(); // Solo actualiza si guardaste
   }
 }
-
-
-
-  
-  
-}
-

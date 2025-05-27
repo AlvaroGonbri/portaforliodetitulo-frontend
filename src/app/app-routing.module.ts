@@ -24,6 +24,10 @@ const routes: Routes = [
     loadChildren: () => import('./Pages/home/home.module').then(m => m.HomePageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'gestion-inventario',
+    loadChildren: () => import('./Pages/gestion-inventario/gestion-inventario.module').then( m => m.GestionInventarioPageModule)
+  },
 ];
 
 @NgModule({

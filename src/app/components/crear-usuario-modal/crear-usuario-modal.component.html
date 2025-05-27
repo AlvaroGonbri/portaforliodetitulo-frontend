@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Crear usuario</ion-title>
+    <ion-title>Crear/Editar usuario</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">Cerrar</ion-button>
     </ion-buttons>
@@ -8,63 +8,89 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form (ngSubmit)="crearUsuario()">
-    <ion-item>
-      <ion-label position="floating">Nombre de usuario</ion-label>
-      <ion-input [(ngModel)]="usuario.username" name="username" required></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input
-        type="email"
-        [(ngModel)]="usuario.email"
-        name="email"
-        #email="ngModel"
-        required
-        email
-      ></ion-input>
-    </ion-item>
-    <ion-note *ngIf="email.invalid && (email.dirty || email.touched)" color="danger">
-      <span *ngIf="email.errors?.['required']">El correo es obligatorio</span>
-      <span *ngIf="email.errors?.['email']">Formato de correo inválido</span>
-    </ion-note>
-    <ion-item>
-      <ion-label position="floating">Nombre</ion-label>
-      <ion-input [(ngModel)]="usuario.first_name" name="first_name"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Apellido</ion-label>
-      <ion-input [(ngModel)]="usuario.last_name" name="last_name"></ion-input>
-    </ion-item>
-<ion-item>
-  <ion-label position="floating">Contraseña</ion-label>
-  <ion-input
-    type="password"
-    [(ngModel)]="usuario.password"
-    name="password"
-    #password="ngModel"
-    required
-    minlength="8"
-  ></ion-input>
-</ion-item>
-<ion-note *ngIf="password.invalid && (password.dirty || password.touched)" color="danger">
-  <span *ngIf="password.errors?.['required']">La contraseña es obligatoria</span>
-  <span *ngIf="password.errors?.['minlength']">La contraseña no cumple los requisitos</span>
-</ion-note>
+  <ion-card>
+    <ion-card-content>
+      <form (ngSubmit)="crearUsuario()">
+        <!-- Sección 1: Atributos del usuario -->
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Nombre de usuario</ion-label>
+            <ion-input [(ngModel)]="usuario.username" name="username" required></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Correo electrónico</ion-label>
+            <ion-input
+              type="email"
+              [(ngModel)]="usuario.email"
+              name="email"
+              #email="ngModel"
+              required
+              email
+            ></ion-input>
+          </ion-item>
+          <ion-note *ngIf="email.invalid && (email.dirty || email.touched)" color="danger">
+            <span *ngIf="email.errors?.['required']">El correo es obligatorio</span>
+            <span *ngIf="email.errors?.['email']">Formato de correo inválido</span>
+          </ion-note>
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input [(ngModel)]="usuario.first_name" name="first_name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Apellido</ion-label>
+            <ion-input [(ngModel)]="usuario.last_name" name="last_name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Cargo</ion-label>
+            <ion-input [(ngModel)]="usuario.cargo" name="cargo"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Rol</ion-label>
+            <ion-select [(ngModel)]="usuario.grupoSeleccionado" name="grupoSeleccionado" placeholder="Selecciona un rol" required>
+              <ion-select-option *ngFor="let grupo of grupos" [value]="grupo.id">
+                {{ grupo.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
 
-    <ion-note *ngIf="password.invalid && (password.dirty || password.touched)" color="danger">
-      <span *ngIf="password.errors?.['required']">La contraseña es obligatoria</span>
-      <span *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</span>
-    </ion-note>
-    <ion-item>
-      <ion-label position="floating">Cargo</ion-label>
-      <ion-input [(ngModel)]="usuario.cargo" name="cargo"></ion-input>
-    </ion-item>
-    <ion-select [(ngModel)]="usuario.grupoSeleccionado" name="grupoSeleccionado" required>
-      <ion-select-option *ngFor="let grupo of grupos" [value]="grupo.id">
-        {{ grupo.name }}
-      </ion-select-option>
-    </ion-select>
-    <ion-button expand="block" type="submit" color="primary">Guardar</ion-button>
-  </form>
+        <!-- Campo de contraseña solo para creación -->
+        <div *ngIf="!usuario.id">
+          <ion-item>
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input
+              type="password"
+              [(ngModel)]="usuario.password"
+              name="password"
+              #password="ngModel"
+              required
+              minlength="8"
+            ></ion-input>
+          </ion-item>
+          <ion-note *ngIf="password.invalid && (password.dirty || password.touched)" color="danger">
+            <span *ngIf="password.errors?.['required']">La contraseña es obligatoria</span>
+            <span *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</span>
+          </ion-note>
+        </div>
+
+        <ion-button expand="block" type="submit" color="primary" style="margin-top: 16px;">
+          Guardar usuario
+        </ion-button>
+      </form>
+
+      <!-- Sección 2: Cambio de contraseña (solo para editar) -->
+      <div *ngIf="usuario.id" style="margin-top: 32px;">
+        <ion-item>
+          <ion-label position="floating">Nueva contraseña</ion-label>
+          <ion-input type="password" [(ngModel)]="new_password" name="new_password"></ion-input>
+        </ion-item>
+        <ion-note color="medium" style="margin-left: 16px; display: block;">
+          Si deseas cambiar la contraseña del usuario, ingresa una nueva aquí y haz clic en el botón.
+        </ion-note>
+        <ion-button expand="block" style="margin-top: 8px;" (click)="cambiarPasswordOtroUsuario()" type="button">
+          Actualizar contraseña
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
