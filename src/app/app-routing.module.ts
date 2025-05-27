@@ -26,6 +26,8 @@ const routes: Routes = [
   },
   {
     path: 'gestion-inventario',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
     loadChildren: () => import('./Pages/gestion-inventario/gestion-inventario.module').then( m => m.GestionInventarioPageModule)
   },
 ];
