@@ -1,11 +1,11 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>home</ion-title>
+  <ion-toolbar class="custom-toolbar">
+    <ion-title>¡Bienvenido!</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
+<ion-content class="login-gradient-bg">
+  <ion-list class="glass-panel">
     <ion-item *ngFor="let page of userPages" [routerLink]="page.url">
       <ion-icon [name]="page.icon" slot="start"></ion-icon>
       <ion-label>{{ page.title }}</ion-label>

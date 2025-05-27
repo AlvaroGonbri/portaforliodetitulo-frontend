@@ -1,103 +1,45 @@
-.users-title-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  margin-top: 1rem;
+.login-gradient-bg {
+  --background: none;
+  background: linear-gradient(135deg, #7b1fa2 0%, #e53935 50%, #ffb300 100%);
+  min-height: 100vh;
 }
-
-.main-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #2D5C88;
-  margin: 0;
-  flex: 1;
-}
-
-.btn-outline-primary {
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border: 2px solid #2D5C88;
-  background: transparent;
-  color: #2D5C88;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.btn-outline-primary:hover {
-  background: #2D5C88;
-  color: #BAFF39;
-}
-
-.users-table-container {
-  background: #F5F6FA;
-  padding: 2rem 1rem;
-  border-radius: 8px;
-  overflow-x: auto;
-}
-
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(45, 92, 136, 0.08);
-}
-
-.users-table th {
-  background: #2D5C88;
+.panel-usuario-card {
+  background: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
   color: #fff;
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-weight: 600;
 }
-
-.users-table td {
-  padding: 0.75rem 1rem;
-  color: #333333;
-  border-bottom: 1px solid #F5F6FA;
+ion-button[color="light"] {
+  --background: #fff;
+  --color: #b71c1c;
+  --background-hover: #f5f5f5;
+  --color-hover: #d32f2f;
+  --border-radius: 8px;
+  font-weight: bold;
 }
-
-.users-table tr:last-child td {
-  border-bottom: none;
+.btn-crear {
+  --background: #c62828;
+  --color: #fff;
+  --background-hover: #ad1457;
+  --color-hover: #fff;
+  --border-radius: 8px;
+  font-weight: bold;
 }
-
-.edit-link {
-  color: #31EC56;
-  font-weight: 500;
-  text-decoration: none;
+.btn-actualizar {
+  --background: #ffb300;
+  --color: #7b1fa2;
+  --background-hover: #ffa000;
+  --color-hover: #fff;
+  --border-radius: 8px;
+  font-weight: bold;
 }
-
-.delete-link {
-  color: #E94823;
-  font-weight: 500;
-  text-decoration: none;
+.logout-btn {
+  --background: rgba(255,255,255,0.25);
+  --color: #8f1b1b;
+  font-weight: bold;
+  border-radius: 8px;
+  backdrop-filter: blur(2px);
 }
-
-.divider {
-  color: #333333;
-  margin: 0 0.5rem;
-}
-
-@media (max-width: 700px) {
-  .users-title-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-  .main-title {
-    font-size: 1.5rem;
-    text-align: left;
-  }
-  .btn-outline-primary {
-    width: 100%;
-  }
-  .users-table th, .users-table td {
-    padding: 0.5rem 0.3rem;
-    font-size: 0.95rem;
-  }
-}
-

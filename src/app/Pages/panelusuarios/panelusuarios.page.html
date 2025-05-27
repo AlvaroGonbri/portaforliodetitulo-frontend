@@ -4,7 +4,7 @@
       <h1 style="margin: 0;">Panel de usuarios</h1>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="logout()" color="danger">
+      <ion-button class="logout-btn" (click)="logout()">
         <ion-icon slot="start" name="log-out"></ion-icon>
         Cerrar sesión
       </ion-button>
@@ -12,23 +12,23 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="login-gradient-bg">
   <!-- Botones Crear y Actualizar en la esquina superior izquierda -->
   <div style="display: flex; gap: 8px; margin: 16px 0 0 16px;">
-    <ion-button (click)="crearUsuario()" color="success">
+    <ion-button class="btn-crear" (click)="crearUsuario()">
       <ion-icon slot="start" name="add"></ion-icon>
       Crear usuario
     </ion-button>
-    <ion-button (click)="actualizarUsuarios()">
+    <ion-button class="btn-actualizar" (click)="actualizarUsuarios()">
       <ion-icon slot="start" name="refresh"></ion-icon>
       Actualizar
     </ion-button>
   </div>
 
   <!-- Tabla de usuarios -->
-  <ion-card style="margin: 16px;">
+  <ion-card style="margin: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.2); background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);">
     <ion-card-content>
-      <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
+      <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px; color: #fff;">
         <thead>
           <tr>
             <th style="padding: 12px 20px;">Usuario</th>
