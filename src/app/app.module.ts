@@ -3,17 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
+
 import { IonButton, IonicModule, IonicRouteStrategy, IonInput } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthInterceptor } from './services/Auth-Interceptor/auth-interceptor.service';
-import { EditarProductoModalComponent } from './components/editar-producto-modal/editar-producto-modal.component';
+import { CrearProductoModalComponent } from './components/crear-producto-modal/crear-producto-modal.component';
 import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
-  declarations: [AppComponent, EditarProductoModalComponent],
+  declarations: [AppComponent, CrearProductoModalComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, FormsModule],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy},

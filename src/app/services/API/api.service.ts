@@ -1,10 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { users } from 'src/app/models/user.interface';
+import { TipoProducto, users } from 'src/app/models/user.interface';
 import { groups } from 'src/app/models/user.interface';
 import { userProfile } from 'src/app/models/user.interface';
 import { Producto } from 'src/app/models/user.interface';
+import { Categoria } from 'src/app/models/user.interface';
 
 
 @Injectable({
@@ -14,12 +15,16 @@ export class APIService {
 
   urlUsers = "http://127.0.0.1:8000/users/";
   urlGroups = "http://127.0.0.1:8000/groups/";
+  urlBase = "http://127.0.0.1:8000/rest/"
   urlInventario = "http://127.0.0.1:8000/rest/productos/";
+  urlCategorias = "http://127.0.0.1:8000/rest/categorias/"
 
  
   private apiKey: string = 'ac5288cad4f1df04bc4d56fe6af374efb057ec4b';
 
   constructor(private http: HttpClient) { }
+
+//Inicio Gestion de usuarios
 
   getusers(): Observable<users[]> {
     // Configura los headers con la API key
@@ -58,7 +63,18 @@ editarUsuario(id: number, usuario: any): Observable<any> {
   return this.http.patch(`${this.urlUsers}${id}/`, usuario, { headers });
 }
 
-// Listar productos
+cambiarPasswordOtroUsuario(user_id: number, new_password: string): Observable<any> {
+  return this.http.put(`http://127.0.0.1:8000/api/change-other-password/${user_id}/`, { new_password });
+}
+
+  getCategorias(): Observable<Categoria[]> {
+    return this.http.get<Categoria[]>(this.urlCategorias);
+  }
+
+
+// Fin Gestion de usuarios
+
+// Inicio Gestion de Productos
 getProductos(): Observable<Producto[]> {
   return this.http.get<Producto[]>(`${this.urlInventario}`);
 }
@@ -69,8 +85,8 @@ crearProducto(producto: Producto): Observable<Producto> {
 }
 
 // Editar producto
-editarProducto(id: number, producto: Producto): Observable<Producto> {
-  return this.http.put<Producto>(`${this.urlInventario}/${id}`, producto);
+editarProducto(producto: Producto): Observable<Producto> {
+  return this.http.patch<Producto>(`${this.urlInventario}${producto.id}/`, producto);
 }
 
 // Eliminar producto
@@ -78,11 +94,41 @@ eliminarProducto(id: number): Observable<any> {
   return this.http.delete(`${this.urlInventario}${id}`);
 }
 
+getTiposProducto(): Observable<TipoProducto[]> {
+  return this.http.get<TipoProducto[]>(`${this.urlBase}tipos/`);
 
-cambiarPasswordOtroUsuario(user_id: number, new_password: string): Observable<any> {
-  return this.http.put(`http://127.0.0.1:8000/api/change-other-password/${user_id}/`, { new_password });
+}
+
+// Fin Gestion de Productos
+
+crearAsignacion(asignacion: any): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`  // Asegura que la API key se envíe
+  });
+  return this.http.post(`${this.urlBase}asignaciones/`, asignacion, { headers });
+}
+
+  getTecnicos(): Observable<any[]> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.get<any[]>(`${this.urlBase}tecnicos/`, { headers }); // Asegúrate de tener este endpoint
+}
+
+//Historial de Movimientos
+
+getMovimientos(params?: any): Observable<any[]> {
+  return this.http.get<any[]>(`${this.urlBase}movimientos/`, { params });
+}
+
+
 }
 
 
 
-}
+
+
+
+
+
+

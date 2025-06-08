@@ -30,6 +30,14 @@ const routes: Routes = [
     data: { roles: ['Admin'] },
     loadChildren: () => import('./Pages/gestion-inventario/gestion-inventario.module').then( m => m.GestionInventarioPageModule)
   },
+  {
+    path: 'asignacion',
+    loadChildren: () => import('./Pages/asignacion/asignacion.module').then( m => m.AsignacionPageModule)
+  },
+  {
+    path: 'historial-movimientos',
+    loadChildren: () => import('./Pages/historial-movimientos/historial-movimientos.module').then( m => m.HistorialMovimientosPageModule)
+  },
 ];
 
 @NgModule({

@@ -3,14 +3,38 @@
     <ion-icon slot="start" name="log-out"></ion-icon>
     Cerrar sesión
   </ion-button>
+  <ion-button (click)="crearProducto()" expand="block" color="primary" style="margin: 8px 16px;">
+    <ion-icon slot="start" name="add-circle"></ion-icon>
+    Crear producto
+  </ion-button>
+
   <ion-item *ngFor="let producto of productos">
     <ion-label>
-      <h2>{{ producto.nom_producto }}</h2>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <h2 style="margin: 0;">{{ producto.nom_producto }}</h2>
+        <ion-badge *ngIf="producto.alerta === 'bajo'" color="danger" style="font-size: 0.95em;">
+          <ion-icon name="alert-circle" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+          Stock Bajo
+        </ion-badge>
+        <ion-badge *ngIf="producto.alerta === 'sobre'" color="warning" style="font-size: 0.95em;">
+          <ion-icon name="trending-up" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+          Sobrestock
+        </ion-badge>
+      </div>
       <p>Código: {{ producto.cod_material }}</p>
-      <p>Stock: {{ producto.cant_existencia }}</p>
+      <p>Stock: {{ producto.cant_existencia }} / {{ producto.stock_maximo }}</p>
       <p>Categoría: {{ producto.categoria.nom_categoria }}</p>
+      <p>Tipo: {{ producto.tipo_nombre }}</p>
     </ion-label>
     <ion-button (click)="editarProducto(producto)">Editar</ion-button>
-    <ion-button color="danger" slot="end" (click)="eliminarProducto(producto.id)">Eliminar</ion-button>
+    <ion-button color="danger" slot="end" (click)="confirmarEliminacion(producto.id)">Eliminar</ion-button>
   </ion-item>
+
+  <ion-alert
+    [isOpen]="mostrarAlerta"
+    header="¿Desea confirmar la eliminación?"
+    message="¿Está seguro que desea eliminar este producto?"
+    [buttons]="alertButtons"
+    (didDismiss)="mostrarAlerta = false">
+  </ion-alert>
 </ion-list>

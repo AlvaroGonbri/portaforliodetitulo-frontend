@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Editar Producto</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Cancelar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="guardarProducto()">
+        <ion-item>
+      <ion-label position="floating">Código de material</ion-label>
+      <ion-input [(ngModel)]="productoForm.cod_material" name="cod_material" type="number" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Nombre del producto</ion-label>
+      <ion-input [(ngModel)]="productoForm.nom_producto" name="nom_producto" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Cantidad en existencia</ion-label>
+      <ion-input [(ngModel)]="productoForm.cant_existencia" name="cant_existencia" type="number" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Descripción</ion-label>
+      <ion-input [(ngModel)]="productoForm.descripcion" name="descripcion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Stock mínimo</ion-label>
+      <ion-input [(ngModel)]="productoForm.stock_minimo" name="stock_minimo" type="number" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Stock máximo</ion-label>
+      <ion-input [(ngModel)]="productoForm.stock_maximo" name="stock_maximo" type="number" required></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="tipos">
+  <ion-label>Tipo</ion-label>
+  <ion-select [(ngModel)]="productoForm.tipo.id" name="tipo" required>
+    <ion-select-option *ngFor="let t of tipos" [value]="t.id">
+      {{ t.nombre }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+<ion-note *ngIf="tipos && !productoForm.tipo?.id && formSubmitted" color="danger">
+  Este campo es obligatorio
+</ion-note>
+
+    <!-- Si tienes un listado de categorías para seleccionar -->
+    <ion-item *ngIf="categorias">
+      <ion-label>Categoría</ion-label>
+      <ion-select [(ngModel)]="productoForm.categoria.id_categoria" name="categoria" required>
+        <ion-select-option *ngFor="let cat of categorias" [value]="cat.id_categoria">
+          {{ cat.nom_categoria }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" color="primary">Guardar cambios</ion-button>
+  </form>
+</ion-content>

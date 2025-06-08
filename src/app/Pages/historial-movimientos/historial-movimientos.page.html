@@ -1,0 +1,13 @@
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let mov of movimientos">
+      <ion-label>
+        <h2>{{ mov.producto_nombre }} - {{ mov.tipo_movimiento | titlecase }}</h2>
+        <p>Fecha: {{ mov.fecha | date:'short' }}</p>
+        <p>Cantidad: {{ mov.cantidad }}</p>
+        <p>Técnico: {{ mov.tecnico_email }}</p>
+        <p>Observaciones: {{ mov.observaciones }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

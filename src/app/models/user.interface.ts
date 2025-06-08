@@ -22,7 +22,13 @@ export interface Categoria {
   nom_categoria: string;
 }
 
+export interface TipoProducto {
+  id: number;
+  nombre: string;
+}
+
 export interface Producto {
+  tipo: { id: number; nombre: string; };
   id: number;
   categoria: Categoria;
   cod_material: number;
@@ -31,5 +37,5 @@ export interface Producto {
   descripcion: string;
   stock_minimo: number;
   stock_maximo: number;
-  tipo: string;
+  tipo_nombre: string;
 }
