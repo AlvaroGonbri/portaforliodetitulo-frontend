@@ -4,17 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AsignacionPageRoutingModule } from './asignacion-routing.module';
+import { PortalTecnicosPageRoutingModule } from './portal-tecnicos-routing.module';
 
-import { AsignacionPage } from './asignacion.page';
+import { PortalTecnicosPage } from './portal-tecnicos.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    AsignacionPageRoutingModule
+    PortalTecnicosPageRoutingModule
   ],
-  declarations: [AsignacionPage]
+  declarations: [PortalTecnicosPage]
 })
-export class AsignacionPageModule {}
+export class PortalTecnicosPageModule {}

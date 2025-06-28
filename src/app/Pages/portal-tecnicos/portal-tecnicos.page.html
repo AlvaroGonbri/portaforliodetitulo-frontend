@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Portal de Técnicos - Mis Multas
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="irAHome()" color="medium" class="header-btn">
+        <ion-icon slot="icon-only" name="home"></ion-icon>
+        <span class="btn-text">Inicio</span>
+      </ion-button>
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- Estado de carga -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando multas...</p>
+    </div>
+
+    <!-- Estado de error -->
+    <div *ngIf="error" class="error-message ion-text-center">
+      <ion-icon name="alert-circle" color="danger"></ion-icon>
+      <p>{{ error }}</p>
+      <ion-button fill="clear" (click)="cargarMultas()">
+        <ion-icon slot="start" name="refresh"></ion-icon>
+        Reintentar
+      </ion-button>
+    </div>
+
+    <!-- Listado de multas -->
+    <ion-list *ngIf="!loading && !error">
+  <ion-item *ngFor="let multa of multas">
+    <ion-label>
+      <div class="multa-header">
+        <h2 class="multa-titulo">Multa #{{ multa.MultaID }}</h2>
+        <ion-badge *ngIf="multa.EstadoPago.toLowerCase() === 'pendiente'" color="warning">
+          <ion-icon name="alert-circle" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+          Pendiente
+        </ion-badge>
+        <ion-badge *ngIf="multa.EstadoPago.toLowerCase() === 'pagado'" color="success">
+          <ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+          Pagado
+        </ion-badge>
+      </div>
+      <p><strong>Herramienta:</strong> {{ multa.AsignacionID?.producto_data?.nombre }}</p>
+      <p><strong>Fecha:</strong> {{ formatearFecha(multa.FechaGeneracion) }}</p>
+      <p><strong>Días de retraso:</strong> {{ multa.DiasRetraso }}</p>
+      <p><strong>Monto total:</strong> {{ multa.MontoTotal | currency:'CLP':'$':'1.0-0' }}</p>
+    </ion-label>
+  </ion-item>
+</ion-list>
+
+
+    <!-- Estado vacío -->
+    <div *ngIf="!loading && !error && multas.length === 0" class="empty-state">
+      <ion-icon name="checkmark-circle" color="success"></ion-icon>
+      <p>¡No tienes multas registradas!</p>
+    </div>
+  </ion-list>
+</ion-content>

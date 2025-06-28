@@ -1,0 +1,17 @@
+.multa-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.multa-titulo {
+  margin: 0;
+  font-weight: 600;
+}
+.loading-container, .error-message, .empty-state {
+  text-align: center;
+  margin-top: 32px;
+}
+ion-badge {
+  font-size: 0.9em;
+  margin-left: 8px;
+}

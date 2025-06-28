@@ -1,47 +1,107 @@
-.login-gradient-bg {
-  --background: none;
-  background: linear-gradient(135deg, #7b1fa2 0%, #e53935 50%, #ffb300 100%);
-  min-height: 100vh;
-}
-.panel-usuario-card {
-  background: rgba(255, 255, 255, 0.22) !important;
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 16px;
-  border: 1.5px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-}
-ion-button[color="light"] {
-  --background: #fff;
-  --color: #b71c1c;
-  --background-hover: #f5f5f5;
-  --color-hover: #d32f2f;
-  --border-radius: 8px;
-  font-weight: bold;
-}
-.btn-crear {
-  --background: #c62828;
-  --color: #fff;
-  --background-hover: #ad1457;
-  --color-hover: #fff;
-  --border-radius: 8px;
-  font-weight: bold;
-}
-.btn-actualizar {
-  --background: #ffb300;
-  --color: #7b1fa2;
-  --background-hover: #ffa000;
-  --color-hover: #fff;
-  --border-radius: 8px;
-  font-weight: bold;
+.acciones-usuarios {
+  display: flex;
+  gap: 12px;
+  margin: 20px 16px 0 16px;
+  flex-wrap: wrap;
 }
 
-.logout-btn {
-  --background: rgba(255,255,255,0.25);
-  --color: #8f1b1b;
-  font-weight: bold;
-  border-radius: 8px;
-  backdrop-filter: blur(2px);
+.tabla-usuarios-card {
+  margin: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
 }
 
+.tabla-usuarios-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+ion-toolbar, ion-header h1 {
+  color: #222 !important; /* O el color oscuro que prefieras */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+/* Centra el título y oculta texto de botones en móviles */
+ion-title {
+  text-align: center;
+  width: 100%;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-actions .btn-text {
+  display: inline;
+}
+
+@media (max-width: 600px) {
+  .header-actions .btn-text {
+    display: none; /* Solo iconos en móviles */
+  }
+  ion-title {
+    font-size: 1.1em;
+  }
+}
+
+
+ion-button {
+  --color: #fff; /* Para texto blanco en botones de color */
+  font-weight: 500;
+}
+
+
+.tabla-usuarios {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  min-width: 600px;
+}
+
+.tabla-usuarios th, .tabla-usuarios td {
+  padding: 12px 20px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .tabla-usuarios {
+    min-width: 0;
+    width: 100%;
+    display: block;
+  }
+  .tabla-usuarios thead {
+    display: none;
+  }
+  .tabla-usuarios tbody {
+    display: block;
+    width: 100%;
+  }
+  .tabla-usuarios tr {
+    display: block;
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .tabla-usuarios td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.98em;
+  }
+  .tabla-usuarios td:last-child {
+    border-bottom: none;
+  }
+  .tabla-usuarios td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #666;
+    margin-right: 8px;
+    min-width: 90px;
+  }
+}

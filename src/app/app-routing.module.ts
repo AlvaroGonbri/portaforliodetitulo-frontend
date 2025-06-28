@@ -31,13 +31,33 @@ const routes: Routes = [
     loadChildren: () => import('./Pages/gestion-inventario/gestion-inventario.module').then( m => m.GestionInventarioPageModule)
   },
   {
-    path: 'asignacion',
-    loadChildren: () => import('./Pages/asignacion/asignacion.module').then( m => m.AsignacionPageModule)
-  },
-  {
     path: 'historial-movimientos',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
     loadChildren: () => import('./Pages/historial-movimientos/historial-movimientos.module').then( m => m.HistorialMovimientosPageModule)
   },
+  {
+    path: 'asignaciones',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
+    loadChildren: () => import('./Pages/asignaciones/asignaciones.module').then( m => m.AsignacionesPageModule)
+  },
+  {
+    path: 'multas',
+    canActivate: [RoleGuard],
+    data: { roles: ['Admin'] },
+    loadChildren: () => import('./Pages/multas/multas.module').then( m => m.MultasPageModule)
+  },
+  {
+    path: 'portal-tecnicos',
+       canActivate: [RoleGuard],
+    data: { roles: ['tecnicos'] },
+    loadChildren: () => import('./Pages/portal-tecnicos/portal-tecnicos.module').then( m => m.PortalTecnicosPageModule)
+  },
+
+
+
+
 ];
 
 @NgModule({

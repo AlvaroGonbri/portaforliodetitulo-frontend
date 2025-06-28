@@ -19,6 +19,30 @@ export class MenuService {
     url: '/gestion-inventario',
     icon: '/gestioninventario.svg',
     allowedRoles: ['Admin']
+  },
+    {
+    title: 'Historial de Movimientos',
+    url: '/historial-movimientos',
+    icon: '/historialmovimientos.svg',
+    allowedRoles: ['Admin']
+  },
+      {
+    title: 'Asignaciones',
+    url: '/asignaciones',
+    icon: '/Asignaciones.svg',
+    allowedRoles: ['Admin']
+  },
+      {
+    title: 'Multas',
+    url: '/multas',
+    icon: '/Multas.svg',
+    allowedRoles: ['Admin']
+  },
+      {
+    title: 'Portal Tecnicos',
+    url: '/portal-tecnicos',
+    icon: '/Portal-Tecnicos.svg',
+    allowedRoles: ['tecnicos']
   }
   ];
 

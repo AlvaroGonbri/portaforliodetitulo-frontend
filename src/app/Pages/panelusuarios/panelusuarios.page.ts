@@ -6,6 +6,7 @@ import { users, groups } from '../../models/user.interface';
 import { ModalController, AlertController, ToastController } from '@ionic/angular';
 import { CrearUsuarioModalComponent } from 'src/app/components/crear-usuario-modal/crear-usuario-modal.component';
 import { LogoutService } from 'src/app/services/logout/logout.service';
+import { GTHService } from 'src/app/services/gth/gth.service';
 
 @Component({
   selector: 'app-panelusuarios',
@@ -30,7 +31,8 @@ export class PanelusuariosPage implements OnInit {
     private alertController: AlertController,
     private router: Router,
     private toastController: ToastController,
-    private logoutService: LogoutService
+    private logoutService: LogoutService,
+    private gthService: GTHService
   ) { }
 
   ngOnInit(): void {
@@ -75,6 +77,10 @@ export class PanelusuariosPage implements OnInit {
 
   logout(): void {
     this.logoutService.logout();
+  }
+
+  irAHome() {
+    this.gthService.goToHome();
   }
 
   actualizarUsuarios(): void {

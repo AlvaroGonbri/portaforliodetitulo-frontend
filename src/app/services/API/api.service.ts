@@ -1,11 +1,23 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { TipoProducto, users } from 'src/app/models/user.interface';
-import { groups } from 'src/app/models/user.interface';
-import { userProfile } from 'src/app/models/user.interface';
-import { Producto } from 'src/app/models/user.interface';
-import { Categoria } from 'src/app/models/user.interface';
+import { catchError, map, Observable, take } from 'rxjs';
+
+import { 
+  TipoProducto, 
+  users, 
+  groups, 
+  userProfile, 
+  Producto, 
+  Categoria,
+  Tecnico,
+  CrearAsignacion,
+  Devolucion,
+  FiltrosAsignacion,
+  ProductoAsignacion,
+  Asignacion,
+  Multa
+
+} from 'src/app/models/user.interface';
 
 
 @Injectable({
@@ -75,9 +87,10 @@ cambiarPasswordOtroUsuario(user_id: number, new_password: string): Observable<an
 // Fin Gestion de usuarios
 
 // Inicio Gestion de Productos
-getProductos(): Observable<Producto[]> {
-  return this.http.get<Producto[]>(`${this.urlInventario}`);
+getProductos(params?: { search?: string; categoria?: number }): Observable<Producto[]> {
+  return this.http.get<Producto[]>(`${this.urlBase}productos/`, { params });
 }
+
 
 // Crear producto
 crearProducto(producto: Producto): Observable<Producto> {
@@ -101,25 +114,126 @@ getTiposProducto(): Observable<TipoProducto[]> {
 
 // Fin Gestion de Productos
 
-crearAsignacion(asignacion: any): Observable<any> {
-  const headers = new HttpHeaders({
-    'Authorization': `Token ${this.apiKey}`  // Asegura que la API key se envíe
-  });
-  return this.http.post(`${this.urlBase}asignaciones/`, asignacion, { headers });
-}
-
-  getTecnicos(): Observable<any[]> {
+// Métodos específicos para asignaciones
+getProductosDisponibles(): Observable<Producto[]> {
   const headers = new HttpHeaders({
     'Authorization': `Token ${this.apiKey}`
   });
-  return this.http.get<any[]>(`${this.urlBase}tecnicos/`, { headers }); // Asegúrate de tener este endpoint
+  return this.http.get<ProductoAsignacion[]>(`${this.urlBase}asignaciones/materiales_disponibles/`, { headers });
 }
 
-//Historial de Movimientos
-
-getMovimientos(params?: any): Observable<any[]> {
-  return this.http.get<any[]>(`${this.urlBase}movimientos/`, { params });
+getProductosParaAsignacion(): Observable<Producto[]> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.get<Producto[]>(`${this.urlInventario}`, { headers });
 }
+
+
+getTecnicosParaAsignacion(): Observable<Tecnico[]> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.get<Tecnico[]>(`${this.urlBase}tecnicos/`, { headers });
+}
+
+crearAsignacion(asignacion: any): Observable<any> {
+  return this.http.post(`${this.urlBase}asignaciones/`, asignacion);
+}
+
+
+actualizarAsignacion(id: number, asignacion: Asignacion): Observable<Asignacion> {
+    return this.http.post<Asignacion>(`${this.urlBase}asignaciones/${id}/`, asignacion);
+  }
+
+  eliminarAsignacion(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.urlBase}asignaciones/${id}/`);
+  }
+
+reportarPerdida(asignacionId: number, motivo: string): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.post(`${this.urlBase}asignaciones/${asignacionId}/reportar_perdida/`, { motivo }, { headers });
+}
+
+reportarDano(asignacionId: number, motivo: string): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.post(`${this.urlBase}asignaciones/${asignacionId}/reportar_daño/`, { motivo }, { headers });
+}
+
+getAsignaciones(): Observable<Asignacion[]> {
+    return this.http.get<Asignacion[]>(`${this.urlBase}asignaciones/`);
+  }
+
+// Agregar método específico para técnicos
+getTecnicos(): Observable<users[]> {
+  return this.getusers().pipe(
+    map((usuarios: users[]) => 
+      usuarios.filter(u => 
+        u.groups?.some((g: { name: string; }) => g.name === 'Técnico')
+      )
+    )
+  );
+}
+
+devolverHerramienta(asignacionId: number, data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.post(`${this.urlBase}asignaciones/${asignacionId}/devolver/`, data, { headers });
+}
+
+devolverAsignacion(id: number, data: any): Observable<any> {
+  return this.http.post(
+    `${this.urlBase}asignaciones/${id}/devolver/`, 
+    data
+  ).pipe(
+    take(1), // Opcional pero recomendado
+    catchError(error => {
+      console.error('Error en devolución:', error);
+      throw error; // Para manejar en el componente
+    })
+  );
+}
+
+getAlertasVencidas(): Observable<any> {
+  return this.http.get(`${this.urlBase}alertas-vencidas/`);
+}
+
+//Multas
+
+getMultas(): Observable<Multa[]> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.get<Multa[]>(`${this.urlBase}multas/multas/`, { headers });
+}
+
+
+actualizarConfiguracionMulta(data: any): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.post(`${this.urlBase}multas/configuracion/actualizar/`, data, { headers });
+}
+
+getConfiguracionMulta(): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.get(`${this.urlBase}multas/configuracion/actual/`, { headers });
+}
+
+getMisMultas(): Observable<any> {
+  const headers = new HttpHeaders({
+    'Authorization': `Token ${this.apiKey}`
+  });
+  return this.http.get(`${this.urlBase}multas/me/`, { headers });
+}
+
 
 
 }

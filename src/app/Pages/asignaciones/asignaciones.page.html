@@ -1,0 +1,256 @@
+<ion-header>
+  <ion-toolbar>
+    <!-- Fila del título -->
+    <ion-title class="titulo-inventario">
+      Asignaciones
+    </ion-title>
+  </ion-toolbar>
+
+  <!-- Segunda toolbar para los botones, debajo del título -->
+  <ion-toolbar class="toolbar-botones">
+    <ion-buttons slot="start">
+      <ion-button (click)="irAHome()" color="medium" class="header-btn">
+        <ion-icon slot="icon-only" name="home"></ion-icon>
+        <span class="btn-text">Inicio</span>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Estadísticas -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Resumen</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <div class="stat-item">
+              <h3>{{ totalAsignaciones }}</h3>
+              <p>Total Asignaciones</p>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="stat-item">
+              <h3>{{ herramientasActivas }}</h3>
+              <p>Herramientas Activas</p>
+            </div>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="6">
+            <div class="stat-item" [style.color]="herramientasVencidas > 0 ? 'var(--ion-color-danger)' : ''">
+              <h3>{{ herramientasVencidas }}</h3>
+              <p>Herramientas Vencidas</p>
+            </div>
+          </ion-col>
+          <ion-col size="6">
+            <div class="stat-item">
+              <h3>{{ insumosRecientes }}</h3>
+              <p>Insumos</p>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Filtros -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Filtros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Búsqueda -->
+      <ion-searchbar
+        [(ngModel)]="textoBusqueda"
+        (ionInput)="aplicarFiltros()"
+        placeholder="Buscar por producto, técnico o proyecto">
+      </ion-searchbar>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-select 
+              [(ngModel)]="filtros.estado"
+              (ionChange)="aplicarFiltros()"
+              placeholder="Estado">
+              <ion-select-option value="">Todos</ion-select-option>
+              <ion-select-option value="asignado">Asignado</ion-select-option>
+              <ion-select-option value="devuelto">Devuelto</ion-select-option>
+              <ion-select-option value="consumido">Consumido</ion-select-option>
+              <ion-select-option value="perdido">Perdido</ion-select-option>
+              <ion-select-option value="dañado">Dañado</ion-select-option>
+            </ion-select>
+          </ion-col>
+          <ion-col size="6">
+            <ion-select 
+              [(ngModel)]="filtros.tipo_material"
+              (ionChange)="aplicarFiltros()"
+              placeholder="Tipo">
+              <ion-select-option value="">Todos</ion-select-option>
+              <ion-select-option value="herramienta">Herramientas</ion-select-option>
+              <ion-select-option value="insumo">Insumos</ion-select-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-button 
+              (click)="limpiarFiltros()" 
+              fill="clear" 
+              size="small">
+              Limpiar Filtros
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Herramientas Vencidas con indicadores de días de atraso -->
+  <ion-card *ngIf="alertasVencidas.length > 0">
+    <ion-card-header>
+      <ion-card-title style="color: var(--ion-color-danger);">
+        ⚠️ Herramientas Vencidas ({{ alertasVencidas.length }})
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let alerta of alertasVencidas" lines="full">
+          <ion-label>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <h3 style="margin: 0;">{{ alerta.producto_data.nombre }}</h3>
+              <!-- Badge de días de atraso -->
+              <ion-badge 
+                [color]="getColorAtraso(calcularDiasAtraso(alerta.FechaDevolucionEsperada))"
+                style="font-size: 0.9em;">
+                <ion-icon name="time-outline" style="margin-right: 2px;"></ion-icon>
+                {{ calcularDiasAtraso(alerta.FechaDevolucionEsperada) }} 
+                {{ calcularDiasAtraso(alerta.FechaDevolucionEsperada) === 1 ? 'día' : 'días' }} de a|traso
+              </ion-badge>
+            </div>
+            <p style="margin: 2px 0;">
+              <strong>Técnico:</strong> {{ getTecnicoNombre(alerta.TecnicoID) }}
+            </p>
+            <p style="margin: 2px 0;">
+              <strong>Debía devolverse:</strong> {{ formatearFecha(alerta.FechaDevolucionEsperada) }}
+            </p>
+            <p style="margin: 2px 0;">
+              <strong>Cantidad:</strong> {{ alerta.CantidadAsignada }}
+            </p>
+          </ion-label>
+          <!--<ion-button 
+            fill="outline" 
+            color="success"
+            [disabled]="procesandoDevolucion"
+            (click)="devolverHerramienta(alerta)">
+            <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+            Marcar como devuelta
+          </ion-button>-->
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Lista de Herramientas No Devueltas con indicadores mejorados -->
+  <ion-card *ngIf="herramientasNoDevueltas.length > 0">
+    <ion-card-header>
+      <ion-card-title>Herramientas Prestadas</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let asignacion of herramientasNoDevueltas" lines="full">
+          <ion-label>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <h2 style="margin: 0;">{{ asignacion.producto_data?.nombre || 'Herramienta sin nombre' }}</h2>
+              
+              <!-- Badge de estado según si está vencida o no -->
+              <ion-badge 
+                *ngIf="estaVencida(asignacion.FechaDevolucionEsperada)"
+                [color]="getColorAtraso(calcularDiasAtraso(asignacion.FechaDevolucionEsperada))">
+                <ion-icon name="alert-circle" style="margin-right: 2px;"></ion-icon>
+                {{ calcularDiasAtraso(asignacion.FechaDevolucionEsperada) }} 
+                {{ calcularDiasAtraso(asignacion.FechaDevolucionEsperada) === 1 ? 'día' : 'días' }} de atraso
+              </ion-badge>
+              
+              <ion-badge 
+                *ngIf="!estaVencida(asignacion.FechaDevolucionEsperada)"
+                color="success">
+                <ion-icon name="checkmark-circle" style="margin-right: 2px;"></ion-icon>
+                Al día
+              </ion-badge>
+            </div>
+            
+            <p style="margin: 2px 0;">
+              <strong>Técnico:</strong> {{ asignacion.tecnico_data?.nombre_completo }}
+            </p>
+            <p style="margin: 2px 0;">
+              <strong>Cantidad:</strong> {{ asignacion.CantidadAsignada }}
+            </p>
+            <p style="margin: 2px 0;" 
+               [style.color]="estaVencida(asignacion.FechaDevolucionEsperada) ? 'var(--ion-color-danger)' : ''">
+              <strong>Fecha de devolución:</strong> {{ formatearFecha(asignacion.FechaDevolucionEsperada) }}
+            </p>
+            
+            <!-- Información adicional si está vencida -->
+<div *ngIf="estaVencida(asignacion.FechaDevolucionEsperada)" 
+     style="background-color: #ce1126; color: #fff; padding: 8px; border-radius: 4px; margin-top: 8px; font-weight: 600;">
+  <ion-icon name="warning" style="margin-right: 4px; color: #fff;"></ion-icon>
+  La herramienta <strong>{{ asignacion.producto_data?.nombre }}</strong> lleva 
+  <strong>{{ calcularDiasAtraso(asignacion.FechaDevolucionEsperada) }}</strong> días de atraso.
+</div>
+
+
+
+          </ion-label>
+          
+          <ion-button 
+            [disabled]="procesandoDevolucion"
+            [color]="estaVencida(asignacion.FechaDevolucionEsperada) ? 'danger' : 'primary'"
+            (click)="marcarComoDevuelta(asignacion)">
+            <ion-icon 
+              [name]="estaVencida(asignacion.FechaDevolucionEsperada) ? 'warning' : 'checkmark-circle'" 
+              slot="start">
+            </ion-icon>
+            {{ estaVencida(asignacion.FechaDevolucionEsperada) ? 'RECIBIR TARDÍA' : 'RECIBIR' }}
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Mensaje cuando no hay asignaciones -->
+  <ion-card *ngIf="asignacionesFiltradas.length === 0">
+    <ion-card-content class="ion-text-center">
+      <ion-icon name="document-outline" size="large" color="medium"></ion-icon>
+      <h3>No hay asignaciones</h3>
+      <p>No se encontraron asignaciones que coincidan con los filtros.</p>
+      <ion-button (click)="abrirModalCrearAsignacion()" fill="outline">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Crear Primera Asignación
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+  
+
+  <!-- Botón flotante para crear asignación -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="abrirModalCrearAsignacion()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

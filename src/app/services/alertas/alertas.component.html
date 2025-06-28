@@ -1,0 +1,17 @@
+<div *ngIf="alertas.length > 0" class="alertas-container">
+  <h2>🔔 Herramientas Vencidas</h2>
+  <ion-list>
+    <ion-item *ngFor="let alerta of alertas">
+      <ion-label>
+        <h3>{{ alerta.producto_data.nom_producto }}</h3>
+        <p>Técnico: {{ alerta.tecnico_data.nombre_completo }}</p>
+        <p>Vence el: {{ alerta.FechaDevolucionEsperada | date:'dd/MM/yyyy' }}</p>
+      </ion-label>
+      <ion-button (click)="devolverHerramienta(alerta)">Marcar como devuelta</ion-button>
+    </ion-item>
+  </ion-list>
+</div>
+
+<div *ngIf="alertas.length === 0" class="sin-alertas">
+  🎉 ¡No hay herramientas vencidas!
+</div>

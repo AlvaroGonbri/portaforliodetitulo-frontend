@@ -1,13 +1,317 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <h1 style="margin: 0;">📋 Historial de Movimientos</h1>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="exportarHistorial()" color="success">
+        <ion-icon slot="start" name="download"></ion-icon>
+        Exportar
+      </ion-button>
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+      <ion-button (click)="irAHome()" color="medium" class="header-btn">
+        <ion-icon slot="icon-only" name="home"></ion-icon>
+        <span class="btn-text">Inicio</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
-  <ion-list>
-    <ion-item *ngFor="let mov of movimientos">
-      <ion-label>
-        <h2>{{ mov.producto_nombre }} - {{ mov.tipo_movimiento | titlecase }}</h2>
-        <p>Fecha: {{ mov.fecha | date:'short' }}</p>
-        <p>Cantidad: {{ mov.cantidad }}</p>
-        <p>Técnico: {{ mov.tecnico_email }}</p>
-        <p>Observaciones: {{ mov.observaciones }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+  <!-- Filtros de búsqueda -->
+  <ion-card style="margin: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.2); background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);">
+    <ion-card-header>
+      <ion-card-title>🔍 Filtros de Búsqueda</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <!-- Filtro por Producto -->
+        <ion-col size="12" size-md="3">
+          <ion-item>
+            <ion-label position="stacked">Producto</ion-label>
+            <ion-input 
+              [(ngModel)]="filtros.producto" 
+              placeholder="Buscar por código o nombre"
+              (ionInput)="aplicarFiltros()">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+
+        <!-- Filtro por Acción -->
+        <ion-col size="12" size-md="3">
+          <ion-item>
+            <ion-label position="stacked">Tipo de Movimiento</ion-label>
+            <ion-select 
+              [(ngModel)]="filtros.accion" 
+              placeholder="Todas las acciones"
+              (ionSelectionChange)="aplicarFiltros()">
+              <ion-select-option value="">Todas</ion-select-option>
+              
+              <!-- Movimientos de Inventario -->
+              <ion-select-option value="crear">✅ Crear Producto</ion-select-option>
+              <ion-select-option value="editar">✏️ Editar Producto</ion-select-option>
+              <ion-select-option value="stock_entrada">📈 Entrada de Stock</ion-select-option>
+              <ion-select-option value="stock_salida">📉 Salida de Stock</ion-select-option>
+              <ion-select-option value="eliminar">🗑️ Eliminar Producto</ion-select-option>
+              
+              <!-- Movimientos de Asignaciones -->
+              <ion-select-option value="crear_asignacion">📦 Crear Asignación</ion-select-option>
+              <ion-select-option value="devolucion">↩️ Devolución</ion-select-option>
+              <ion-select-option value="devolucion_tardia">⚠️ Devolución Tardía</ion-select-option>
+              <ion-select-option value="consumo">🔥 Consumo</ion-select-option>
+              <ion-select-option value="perdida">❌ Pérdida</ion-select-option>
+              <ion-select-option value="dano">💥 Daño</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <!-- Filtro por Usuario/Técnico -->
+        <ion-col size="12" size-md="3">
+          <ion-item>
+            <ion-label position="stacked">Usuario/Técnico</ion-label>
+            <ion-select 
+              [(ngModel)]="filtros.usuario" 
+              placeholder="Todos los usuarios"
+              (ionSelectionChange)="aplicarFiltros()">
+              <ion-select-option value="">Todos</ion-select-option>
+              <ion-select-option *ngFor="let usuario of usuarios" [value]="usuario.id">
+                {{usuario.username}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <!-- Filtro por Fecha -->
+        <ion-col size="12" size-md="3">
+          <ion-item>
+            <ion-label position="stacked">Fecha</ion-label>
+            <ion-datetime 
+              [(ngModel)]="filtros.fecha" 
+              presentation="date"
+              (ionChange)="aplicarFiltros()">
+            </ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- Botones de acción -->
+      <ion-row style="margin-top: 16px;">
+        <ion-col size="auto">
+          <ion-button (click)="limpiarFiltros()" fill="outline">
+            <ion-icon slot="start" name="refresh"></ion-icon>
+            Limpiar Filtros
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button (click)="cargarHistorial()" color="primary">
+            <ion-icon slot="start" name="search"></ion-icon>
+            Buscar
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Estadísticas rápidas ACTUALIZADAS -->
+  <ion-row style="margin: 0 16px;">
+    <ion-col size="6" size-md="2">
+      <ion-card class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <ion-card-content style="text-align: center;">
+          <h2 style="margin: 0; font-size: 20px;">{{estadisticas.total}}</h2>
+          <p style="margin: 8px 0 0 0; font-size: 12px;">Total Movimientos</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size="6" size-md="2">
+      <ion-card class="stat-card" style="background: linear-gradient(135deg, #48C6EF 0%, #6F86D6 100%); color: white;">
+        <ion-card-content style="text-align: center;">
+          <h2 style="margin: 0; font-size: 20px;">{{estadisticas.entradas}}</h2>
+          <p style="margin: 8px 0 0 0; font-size: 12px;">Entradas</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size="6" size-md="2">
+      <ion-card class="stat-card" style="background: linear-gradient(135deg, #FF8A80 0%, #FF5722 100%); color: white;">
+        <ion-card-content style="text-align: center;">
+          <h2 style="margin: 0; font-size: 20px;">{{estadisticas.salidas}}</h2>
+          <p style="margin: 8px 0 0 0; font-size: 12px;">Salidas</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size="6" size-md="2">
+      <ion-card class="stat-card" style="background: linear-gradient(135deg, #A8E6CF 0%, #4CAF50 100%); color: white;">
+        <ion-card-content style="text-align: center;">
+          <h2 style="margin: 0; font-size: 20px;">{{estadisticas.productos}}</h2>
+          <p style="margin: 8px 0 0 0; font-size: 12px;">Productos Únicos</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size="6" size-md="2">
+      <ion-card class="stat-card" style="background: linear-gradient(135deg, #FFB74D 0%, #FF9800 100%); color: white;">
+        <ion-card-content style="text-align: center;">
+          <h2 style="margin: 0; font-size: 20px;">{{estadisticas.asignaciones}}</h2>
+          <p style="margin: 8px 0 0 0; font-size: 12px;">Asignaciones</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size="6" size-md="2">
+      <ion-card class="stat-card" style="background: linear-gradient(135deg, #81C784 0%, #4CAF50 100%); color: white;">
+        <ion-card-content style="text-align: center;">
+          <h2 style="margin: 0; font-size: 20px;">{{estadisticas.devoluciones}}</h2>
+          <p style="margin: 8px 0 0 0; font-size: 12px;">Devoluciones</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+  <!-- Tabla de historial -->
+  <ion-card style="margin: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.2); background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);">
+    <ion-card-header>
+      <ion-card-title>
+        📊 Historial de Movimientos
+        <ion-badge color="primary" style="margin-left: 8px;">{{historial.length}} registros</ion-badge>
+      </ion-card-title>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <!-- Loading -->
+      <div *ngIf="cargando" style="text-align: center; padding: 40px;">
+        <ion-spinner></ion-spinner>
+        <p>Cargando historial...</p>
+      </div>
+
+      <!-- Tabla -->
+      <div *ngIf="!cargando" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: separate; border-spacing: 0 8px;">
+          <thead>
+            <tr>
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #333;">Fecha</th>
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #333;">Acción</th>
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #333;">Producto</th>
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #333;">Código</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; color: #333;">Cantidad</th>
+              <th style="padding: 12px 16px; text-align: left; font-weight: 600; color: #333;">Usuario</th>
+              <th style="padding: 12px 16px; text-align: center; font-weight: 600; color: #333;">Detalles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of historialFiltrado; trackBy: trackById" 
+                style="background: rgba(255,255,255,0.1); transition: all 0.3s ease;">
+              
+              <!-- Fecha -->
+              <td style="padding: 12px 16px; color: #555;">
+                <div style="font-size: 14px; font-weight: 500;">
+                  {{ formatearFecha(item.fecha_accion) }}
+                </div>
+                <div style="font-size: 12px; color: #777;">
+                  {{ formatearHora(item.fecha_accion) }}
+                </div>
+              </td>
+
+              <!-- Acción con badge -->
+              <td style="padding: 12px 16px;">
+                <ion-badge [color]="getColorAccion(item.accion)" style="font-size: 12px;">
+                  {{ getIconoAccion(item.accion) }} {{ getTextoAccion(item.accion) }}
+                </ion-badge>
+              </td>
+
+              <!-- Producto -->
+              <td style="padding: 12px 16px; color: #333;">
+                <div style="font-weight: 500; font-size: 14px;">{{ item.nombre_producto }}</div>
+                <div style="font-size: 12px; color: #666;">{{ item.categoria || 'Sin categoría' }}</div>
+              </td>
+
+              <!-- Código -->
+              <td style="padding: 12px 16px; color: #555; font-family: monospace; font-size: 13px;">
+                {{ item.nombre_producto }}
+              </td>
+
+              <!-- Cantidad con indicador de cambio -->
+              <td style="padding: 12px 16px; text-align: center;">
+                <div *ngIf="item.cantidad_anterior !== null && item.cantidad_nueva !== null" 
+                     style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                  <span style="color: #999; font-size: 12px;">{{ item.cantidad_anterior }}</span>
+                  <ion-icon name="arrow-forward" style="color: #666; font-size: 12px;"></ion-icon>
+                  <span style="color: #333; font-weight: 500;">{{ item.cantidad_nueva }}</span>
+                  <span [style.color]="getCambioColor(item)" style="font-size: 11px; font-weight: 500;">
+                    {{ getCambioTexto(item) }}
+                  </span>
+                </div>
+                <div *ngIf="item.cantidad_anterior === null">
+                  <span style="color: #333; font-weight: 500;">{{ item.cantidad_nueva }}</span>
+                </div>
+              </td>
+
+              <!-- Usuario CON INFORMACIÓN DE TÉCNICO -->
+              <td style="padding: 12px 16px; color: #555;">
+                <div style="font-weight: 500; font-size: 14px;">{{ item.usuario.username || 'Sistema' }}</div>
+                <div *ngIf="item.ip_address" style="font-size: 11px; color: #777; font-family: monospace;">
+                  {{ item.ip_address }}
+                </div>
+                <!-- Mostrar técnico asignado si es una asignación -->
+                <div *ngIf="getTecnicoAsignado(item)" style="font-size: 12px; color: #0066cc; margin-top: 2px;">
+                  <ion-icon name="person" style="margin-right: 2px; font-size: 10px;"></ion-icon>
+                  {{ getTecnicoAsignado(item) }}
+                </div>
+                <!-- Mostrar días de atraso si es devolución tardía -->
+                <div *ngIf="mostrarInfoAtraso(item)" style="font-size: 11px; color: #ff6b00; margin-top: 2px;">
+                  <ion-icon name="time" style="margin-right: 2px; font-size: 10px;"></ion-icon>
+                  {{ getDiasAtraso(item) }} días de atraso
+                </div>
+              </td>
+
+              <!-- Detalles -->
+              <td style="padding: 12px 16px; text-align: center;">
+                <ion-button (click)="verDetalles(item)" fill="clear" size="small">
+                  <ion-icon name="eye" slot="icon-only"></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+
+            <!-- Mensaje si no hay datos -->
+            <tr *ngIf="historialFiltrado.length === 0 && !cargando">
+              <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                <ion-icon name="document-text-outline" style="font-size: 48px; margin-bottom: 16px; color: #ccc;"></ion-icon>
+                <div>No se encontraron movimientos con los filtros seleccionados</div>
+                <ion-button (click)="limpiarFiltros()" fill="outline" style="margin-top: 16px;">
+                  Limpiar filtros
+                </ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      <div *ngIf="totalPaginas > 1" style="display: flex; justify-content: center; margin-top: 20px; gap: 8px;">
+        <ion-button 
+          (click)="cambiarPagina(paginaActual - 1)" 
+          [disabled]="paginaActual === 1" 
+          fill="outline" 
+          size="small">
+          <ion-icon name="chevron-back"></ion-icon>
+        </ion-button>
+        
+        <ion-button 
+          *ngFor="let pagina of getPaginas()" 
+          (click)="cambiarPagina(pagina)"
+          [fill]="pagina === paginaActual ? 'solid' : 'outline'"
+          [color]="pagina === paginaActual ? 'primary' : 'medium'"
+          size="small">
+          {{ pagina }}
+        </ion-button>
+        
+        <ion-button 
+          (click)="cambiarPagina(paginaActual + 1)" 
+          [disabled]="paginaActual === totalPaginas" 
+          fill="outline" 
+          size="small">
+          <ion-icon name="chevron-forward"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

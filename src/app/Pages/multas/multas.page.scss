@@ -1,0 +1,32 @@
+.loading-container, .error-message, .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 24px 0;
+  text-align: center;
+}
+
+.multa-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.multa-nombre {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.multa-monto {
+  color: var(--ion-color-danger);
+  font-weight: 600;
+}
+
+.text-danger {
+  color: var(--ion-color-danger);
+}
+.text-success {
+  color: var(--ion-color-success);
+}

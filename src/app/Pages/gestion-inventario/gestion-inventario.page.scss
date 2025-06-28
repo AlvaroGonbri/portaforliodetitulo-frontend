@@ -1,18 +1,25 @@
-.producto-row {
+.producto-header {
   display: flex;
   align-items: center;
-  gap: 8px; /* Espacio entre nombre y badge */
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .producto-nombre {
-  font-weight: 500;
-  margin-right: 8px;
+  margin: 0;
+  font-size: 1.1em;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.badge-alert {
-  font-size: 0.95em;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  height: 24px;
+@media (max-width: 600px) {
+  .btn-text {
+    display: none;
+  }
+  .producto-nombre {
+    max-width: 90px;
+    font-size: 1em;
+  }
 }

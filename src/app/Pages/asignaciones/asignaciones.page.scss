@@ -1,0 +1,54 @@
+.titulo-inventario {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.3rem;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Toolbar de botones: espacio y alineación */
+.toolbar-botones {
+  --background: transparent;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* En móviles, los botones se apilan verticalmente y texto de botones se oculta */
+@media (max-width: 600px) {
+  .toolbar-botones {
+    flex-direction: column;
+    align-items: center;
+  }
+  .toolbar-botones ion-buttons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .btn-text {
+    display: none;
+  }
+  .titulo-inventario {
+    font-size: 1.1rem;
+    padding: 0 8px;
+  }
+
+ion-badge[color="danger"] {
+  color: #fff !important;
+}
+
+/* Para mensajes de alerta sobre fondo rojo claro */
+.alerta-atraso, 
+div[style*="background-color: var(--ion-color-danger-tint)"] {
+  color: #fff !important;
+  font-weight: 600;
+}
+
+
+
+}

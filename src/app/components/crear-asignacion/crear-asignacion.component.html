@@ -1,0 +1,277 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Nueva Asignación</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="asignacionForm" (ngSubmit)="guardar()">
+
+    <!-- 1. Selección de Producto -->
+    <ion-card class="selection-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="cube" slot="start"></ion-icon>
+          1. Seleccionar Producto
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-searchbar
+          [(ngModel)]="buscarProducto"
+          [ngModelOptions]="{standalone: true}"
+          (ionInput)="filtrarProductos()"
+          placeholder="Buscar por nombre, código o categoría"
+          show-clear-button="focus">
+        </ion-searchbar>
+        <div class="product-list">
+          <ion-item 
+            *ngFor="let producto of productosFiltrados" 
+            button 
+            (click)="seleccionarProducto(producto)"
+            [class.selected]="productoSeleccionado?.id === producto.id">
+            <ion-avatar slot="start">
+              <ion-icon 
+                [name]="determinarTipoMaterial(producto) === 'herramienta' ? 'construct' : 'cube'"
+                [color]="determinarTipoMaterial(producto) === 'herramienta' ? 'primary' : 'secondary'">
+              </ion-icon>
+            </ion-avatar>
+            <ion-label>
+              <h3>{{ producto.nom_producto }}</h3>
+              <p><strong>Código:</strong> {{ producto.cod_material }}</p>
+              <p><strong>Categoría:</strong> {{ producto.categoria.nom_categoria }}</p>
+              <p><strong>Stock:</strong> {{ producto.cant_existencia }} unidades</p>
+              <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+            </ion-label>
+            <ion-chip 
+              [color]="getStockColor(producto)"
+              slot="end">
+              {{ getStockText(producto) }}
+            </ion-chip>
+          </ion-item>
+        </div>
+        <ion-card *ngIf="productoSeleccionado" class="selected-item">
+          <ion-card-header>
+            <ion-card-subtitle>Producto Seleccionado</ion-card-subtitle>
+            <ion-card-title>{{ productoSeleccionado.nom_producto }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <strong>Código:</strong> {{ productoSeleccionado.cod_material }}
+                </ion-col>
+                <ion-col size="6">
+                  <strong>Stock:</strong> {{ productoSeleccionado.cant_existencia }}
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="6">
+                  <strong>Categoría:</strong> {{ productoSeleccionado.categoria.nom_categoria }}
+                </ion-col>
+                <ion-col size="6">
+                  <strong>Tipo:</strong> 
+                  <ion-chip [color]="asignacionForm.get('TipoMaterial')?.value === 'herramienta' ? 'primary' : 'secondary'">
+                    {{ asignacionForm.get('TipoMaterial')?.value === 'herramienta' ? 'Herramienta' : 'Insumo' }}
+                  </ion-chip>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- 2. Selección de Técnico -->
+<ion-card class="selection-card" *ngIf="productoSeleccionado">
+  <ion-card-header>
+    <ion-card-title>
+      <ion-icon name="person" slot="start"></ion-icon>
+      2. Seleccionar Técnico
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-searchbar
+      [(ngModel)]="buscarTecnico"
+      [ngModelOptions]="{standalone: true}"
+      (ionInput)="filtrarTecnicos()"
+      (keydown)="onBuscarKeydown($event)"
+      placeholder="Buscar por nombre o email"
+      show-clear-button="focus">
+    </ion-searchbar>
+    <div class="tecnico-list">
+      <ion-item
+        *ngFor="let tecnico of tecnicosFiltrados"
+        button
+        (click)="seleccionarTecnico(tecnico)"
+        [class.selected]="tecnicoSeleccionado?.id === tecnico.id">
+        <ion-label>
+          {{ tecnico.first_name }} {{ tecnico.last_name }}
+        </ion-label>
+        <ion-note slot="end">
+          {{ tecnico.groups.length > 0 ? tecnico.groups[0].name : 'Sin grupo' }}
+        </ion-note>
+      </ion-item>
+    </div>
+    <ion-card *ngIf="tecnicoSeleccionado" class="selected-item">
+      <ion-card-header>
+        <ion-card-subtitle>Técnico Seleccionado</ion-card-subtitle>
+        <ion-card-title>{{ getNombreTecnico(tecnicoSeleccionado) }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Email:</strong> {{ tecnicoSeleccionado.email }}</p>
+        <p><strong>Grupo:</strong> {{ tecnicoSeleccionado.groups.length > 0 ? tecnicoSeleccionado.groups[0].name : 'Sin grupo' }}</p>
+      </ion-card-content>
+    </ion-card>
+  </ion-card-content>
+</ion-card>
+
+    <!-- 3. Detalles de la Asignación -->
+    <ion-card *ngIf="productoSeleccionado && tecnicoSeleccionado">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="document-text" slot="start"></ion-icon>
+          3. Detalles de la Asignación
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">
+            Cantidad a Asignar *
+            <ion-text color="medium">
+              (Disponible: {{ productoSeleccionado.cant_existencia }})
+            </ion-text>
+          </ion-label>
+          <ion-input
+            type="number"
+            formControlName="CantidadAsignada"
+            min="1"
+            [max]="productoSeleccionado.cant_existencia"
+            placeholder="Ingresa la cantidad">
+          </ion-input>
+        </ion-item>
+        <ion-item *ngIf="asignacionForm.get('TipoMaterial')?.value === 'herramienta'">
+          <ion-label position="stacked">Fecha de Devolución Esperada *</ion-label>
+          <ion-input
+            type="date"
+            formControlName="FechaDevolucionEsperada"
+            [min]="getFechaMinima()">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Motivo de la Asignación *</ion-label>
+          <ion-textarea
+            formControlName="MotivoAsignacion"
+            placeholder="Describe el motivo de esta asignación"
+            rows="3">
+          </ion-textarea>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Proyecto de Trabajo *</ion-label>
+          <ion-input
+            formControlName="ProyectoTrabajo"
+            placeholder="Nombre del proyecto o trabajo">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Ubicación de Trabajo</ion-label>
+          <ion-input
+            formControlName="UbicacionTrabajo"
+            placeholder="Ubicación donde se utilizará">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Observaciones</ion-label>
+          <ion-textarea
+            formControlName="Observaciones"
+            placeholder="Observaciones adicionales"
+            rows="2">
+          </ion-textarea>
+        </ion-item>
+        <ion-item *ngIf="!validarStock()" lines="none" class="error-item">
+          <ion-icon name="warning" color="danger" slot="start"></ion-icon>
+          <ion-label color="danger">
+            <p>La cantidad solicitada ({{ asignacionForm.get('CantidadAsignada')?.value }}) 
+               supera el stock disponible ({{ productoSeleccionado.cant_existencia }})</p>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Resumen -->
+    <ion-card *ngIf="productoSeleccionado && tecnicoSeleccionado && validarStock()" class="summary-card">
+      <ion-card-header>
+        <ion-card-title color="success">
+          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+          Resumen de la Asignación
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none">
+            <ion-icon [name]="asignacionForm.get('TipoMaterial')?.value === 'herramienta' ? 'construct' : 'cube'" slot="start" color="success"></ion-icon>
+            <ion-label>
+              <h3>{{ productoSeleccionado.nom_producto }}</h3>
+              <p>Cantidad: {{ asignacionForm.get('CantidadAsignada')?.value }} unidades</p>
+              <p>Tipo: {{ asignacionForm.get('TipoMaterial')?.value === 'herramienta' ? 'Herramienta' : 'Insumo' }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-icon name="person" slot="start" color="success"></ion-icon>
+            <ion-label>
+              <h3>{{ getNombreTecnico(tecnicoSeleccionado) }}</h3>
+              <p>{{ tecnicoSeleccionado.email }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item 
+            lines="none" 
+            *ngIf="asignacionForm.get('TipoMaterial')?.value === 'herramienta' && asignacionForm.get('FechaDevolucionEsperada')?.value">
+            <ion-icon name="calendar" slot="start" color="success"></ion-icon>
+            <ion-label>
+              <h3>Devolución Esperada</h3>
+              <p>{{ formatearFecha(asignacionForm.get('FechaDevolucionEsperada')?.value) }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none" *ngIf="asignacionForm.get('ProyectoTrabajo')?.value">
+            <ion-icon name="briefcase" slot="start" color="success"></ion-icon>
+            <ion-label>
+              <h3>Proyecto</h3>
+              <p>{{ asignacionForm.get('ProyectoTrabajo')?.value }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-button 
+            expand="block" 
+            fill="clear" 
+            (click)="cerrar()">
+            Cancelar
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button 
+            expand="block" 
+            (click)="guardar()"
+            [disabled]="!productoSeleccionado || !tecnicoSeleccionado || !validarStock() || asignacionForm.invalid">
+            <ion-icon name="checkmark" slot="start"></ion-icon>
+            Crear Asignación
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

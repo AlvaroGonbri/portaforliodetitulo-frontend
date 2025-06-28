@@ -1,0 +1,25 @@
+// ==================== MODAL STYLES ====================
+// Agregar estos estilos al final de src/global.scss
+
+.modal-detalles-fullscreen {
+  --width: 90%;
+  --max-width: 800px;
+  --height: 85%;
+  --max-height: 90vh;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-detalles-fullscreen .modal-wrapper {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+// Para dispositivos móviles
+@media (max-width: 768px) {
+  .modal-detalles-fullscreen {
+    --width: 95%;
+    --height: 90%;
+    --border-radius: 12px;
+  }
+}

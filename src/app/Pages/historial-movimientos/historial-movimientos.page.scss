@@ -1,0 +1,42 @@
+ion-content {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.welcome-card {
+  margin: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.menu-grid {
+  padding: 20px;
+}
+
+.menu-item {
+  text-align: center;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.menu-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+  color: #667eea;
+}
+
+.menu-title {
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}

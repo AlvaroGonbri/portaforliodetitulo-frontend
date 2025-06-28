@@ -1,0 +1,83 @@
+.selection-card {
+  margin-bottom: 16px;
+}
+
+.product-list, .tecnico-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.selected-item {
+  margin-top: 16px;
+  border: 2px solid var(--ion-color-primary);
+  --background: #9ae765;
+}
+
+.summary-card {
+  border: 2px solid var(--ion-color-success);
+  background: var(--ion-color-success-tint);
+  
+  ion-card-title {
+    color: var(--ion-color-success);
+  }
+}
+
+.error-item {
+  background: var(--ion-color-danger-tint);
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+ion-item.selected {
+  --background: #9ae765;
+  --color: var(--ion-color-primary-contrast);
+  border-left: 4px solid var(--ion-color-primary);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.step-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ion-color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+ion-avatar {
+  --border-radius: 50%;
+  --size: 40px;
+}
+
+ion-chip {
+  font-size: 12px;
+}
+
+.validation-message {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.success-message {
+  background: var(--ion-color-success-tint);
+  color: var(--ion-color-success);
+}
+
+.error-message {
+  background: var(--ion-color-danger-tint);
+  color: var(--ion-color-danger);
+}

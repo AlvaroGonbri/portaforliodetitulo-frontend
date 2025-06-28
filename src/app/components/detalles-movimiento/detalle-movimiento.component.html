@@ -1,0 +1,254 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      <ion-icon [name]="getIconoAccion(movimiento?.accion)" style="margin-right: 8px;"></ion-icon>
+      Detalles del Movimiento
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()" color="light">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content">
+  <div class="container">
+    
+    <!-- Cabecera con información principal -->
+    <ion-card class="header-card">
+      <ion-card-content>
+        <div class="header-info">
+          <div class="action-badge">
+            <ion-badge [color]="getColorAccion(movimiento?.accion)" class="action-badge-large">
+              <ion-icon [name]="getIconoAccion(movimiento?.accion)" style="margin-right: 4px;"></ion-icon>
+              {{ getTextoAccion(movimiento?.accion) }}
+            </ion-badge>
+          </div>
+          <h1 class="product-name">{{ movimiento?.nombre_producto }}</h1>
+          <p class="product-code">
+            <ion-icon name="barcode-outline" style="margin-right: 4px;"></ion-icon>
+            {{ movimiento?.codigo_material }}
+          </p>
+          <p class="timestamp">
+            <ion-icon name="calendar-outline" style="margin-right: 4px;"></ion-icon>
+            {{ formatearFechaCompleta(movimiento?.fecha_accion) }}
+          </p>
+          <p class="time-ago">
+            <ion-icon name="time-outline" style="margin-right: 4px;"></ion-icon>
+            {{ getTiempoTranscurrido(movimiento?.fecha_accion) }}
+          </p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información del producto -->
+    <ion-card class="detail-card">
+      <ion-card-header>
+        <ion-card-title class="card-title">
+          <ion-icon name="cube-outline" color="primary"></ion-icon>
+          Información del Producto
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <ion-icon name="tag-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Nombre</span>
+              <span class="info-value">{{ movimiento?.nombre_producto || 'No disponible' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <ion-icon name="barcode-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Código</span>
+              <span class="info-value code">{{ movimiento?.codigo_material || 'No disponible' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <ion-icon name="folder-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Categoría</span>
+              <span class="info-value">{{ movimiento?.categoria || 'Sin categoría' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <ion-icon name="layers-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Tipo</span>
+              <span class="info-value">{{ movimiento?.tipo_producto || 'Sin tipo' }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Cambios de cantidad -->
+    <ion-card class="detail-card" *ngIf="movimiento?.cantidad_anterior !== null || movimiento?.cantidad_nueva !== null">
+      <ion-card-header>
+        <ion-card-title class="card-title">
+          <ion-icon name="trending-up-outline" color="primary"></ion-icon>
+          Cambios de Cantidad
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="quantity-change" *ngIf="movimiento?.cantidad_anterior !== null && movimiento?.cantidad_nueva !== null">
+          <div class="quantity-flow">
+            <div class="quantity-box anterior">
+              <ion-icon name="remove-circle" color="warning"></ion-icon>
+              <span class="quantity-label">Cantidad Anterior</span>
+              <span class="quantity-value">{{ movimiento?.cantidad_anterior }}</span>
+            </div>
+            
+            <div class="arrow-container">
+              <ion-icon name="arrow-forward" class="arrow-icon" color="primary"></ion-icon>
+            </div>
+            
+            <div class="quantity-box nueva">
+              <ion-icon name="add-circle" color="success"></ion-icon>
+              <span class="quantity-label">Cantidad Nueva</span>
+              <span class="quantity-value">{{ movimiento?.cantidad_nueva }}</span>
+            </div>
+          </div>
+          
+          <div class="change-summary">
+            <ion-badge [color]="getCambioColor()" class="change-badge">
+              <ion-icon name="swap-horizontal" style="margin-right: 4px;"></ion-icon>
+              {{ getCambioTexto() }}
+            </ion-badge>
+          </div>
+        </div>
+        
+        <div *ngIf="movimiento?.cantidad_anterior === null" class="initial-quantity">
+          <ion-icon name="add-circle" color="success" style="font-size: 2rem; margin-bottom: 8px;"></ion-icon>
+          <h3>Cantidad Inicial</h3>
+          <p class="initial-value">{{ movimiento?.cantidad_nueva }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información del usuario -->
+    <ion-card class="detail-card">
+      <ion-card-header>
+        <ion-card-title class="card-title">
+          <ion-icon name="person-outline" color="primary"></ion-icon>
+          Información del Usuario
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <ion-icon name="person-circle-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Usuario</span>
+              <span class="info-value">{{ movimiento?.usuario?.username || 'Sistema' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <ion-icon name="id-card-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Nombre Completo</span>
+              <span class="info-value">{{ getFullName() || 'No disponible' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <ion-icon name="mail-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ movimiento?.usuario?.email || 'No disponible' }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <ion-icon name="globe-outline" color="medium"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Dirección IP</span>
+              <span class="info-value code">{{ movimiento?.ip_address || 'No disponible' }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Descripción -->
+    <ion-card class="detail-card" *ngIf="movimiento?.descripcion">
+      <ion-card-header>
+        <ion-card-title class="card-title">
+          <ion-icon name="document-text-outline" color="primary"></ion-icon>
+          Descripción
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="description-content">
+          <ion-icon name="quote-outline" color="medium" class="quote-icon"></ion-icon>
+          <p class="description">{{ movimiento?.descripcion }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Datos técnicos -->
+    <ion-card class="detail-card" *ngIf="mostrarDatosTecnicos">
+      <ion-card-header>
+        <ion-card-title class="card-title">
+          <ion-icon name="code-outline" color="primary"></ion-icon>
+          Datos Técnicos
+          <ion-button (click)="mostrarDatosTecnicos = false" fill="clear" size="small" class="hide-button">
+            <ion-icon name="eye-off-outline" color="medium"></ion-icon>
+          </ion-button>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="technical-data">
+          <div class="json-section">
+            <h4 class="json-title">
+              <ion-icon name="document-outline" color="warning"></ion-icon>
+              Datos Anteriores
+            </h4>
+            <div class="json-container">
+              <pre class="json-content">{{ formatJSON(movimiento?.datos_anteriores) }}</pre>
+            </div>
+          </div>
+          
+          <div class="json-section">
+            <h4 class="json-title">
+              <ion-icon name="document-outline" color="success"></ion-icon>
+              Datos Nuevos
+            </h4>
+            <div class="json-container">
+              <pre class="json-content">{{ formatJSON(movimiento?.datos_nuevos) }}</pre>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botón para mostrar datos técnicos -->
+    <ion-button 
+      *ngIf="!mostrarDatosTecnicos" 
+      (click)="mostrarDatosTecnicos = true" 
+      fill="outline" 
+      expand="block"
+      class="technical-button">
+      <ion-icon name="code-outline" slot="start"></ion-icon>
+      Ver Datos Técnicos
+    </ion-button>
+
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar class="footer-toolbar">
+    <div class="footer-actions">
+      <ion-button (click)="cerrar()" fill="solid" color="medium" expand="block">
+        <ion-icon name="checkmark" slot="start"></ion-icon>
+        Cerrar
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
