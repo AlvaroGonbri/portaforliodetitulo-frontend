@@ -1,32 +1,180 @@
+.multas-bg {
+  --background: none;
+  background: linear-gradient(135deg, #21a1ff 60%, #fdbb2d 100%);
+  min-height: 100vh;
+  min-width: 100vw;
+}
+
+.multas-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.multas-card {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  padding: 56px 72px 48px 72px; // Más grande
+  min-width: 540px;             // Más ancho mínimo
+  max-width: 1200px;            // Más ancho máximo
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.multas-title {
+  font-weight: bold;
+  color: #1976d2;
+  font-size: 28px;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.config-section {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.config-title {
+  font-weight: 600;
+  color: #1976d2;
+  font-size: 20px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.login-input {
+  margin-bottom: 22px;
+  width: 100%;
+  background: #f5f8ff;
+  border-radius: 8px;
+  --background: #f5f8ff;
+  --highlight-background: #e3f2fd;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  ion-label {
+    color: #1976d2;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  ion-input {
+    font-size: 18px;
+    color: #222;
+  }
+}
+
+.login-btn {
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 1px;
+  background: #d32f2f;
+  --background: #d32f2f;
+  --background-hover: #b71c1c;
+  --background-activated: #b71c1c;
+  --background-focused: #b71c1c;
+  border-radius: 7px;
+  box-shadow: 0 2px 8px rgba(211,47,47,0.15);
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.mensaje {
+  color: #1976d2;
+  margin-top: 10px;
+  font-size: 16px;
+  text-align: center;
+}
+
 .loading-container, .error-message, .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 24px 0;
+  margin: 28px 0;
   text-align: center;
+  color: #1976d2;
 }
 
-.multa-header {
+.error-message {
+  color: #d32f2f;
+  margin-top: 16px;
+  font-size: 16px;
+}
+
+.multas-list {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.multa-item {
+  --background: #f5f8ff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.avatar-multa {
+  background: #e3f2fd;
+  border-radius: 8px;
+  width: 56px;
+  height: 56px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
 }
 
 .multa-nombre {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 600;
+  color: #111;
   margin: 0;
 }
 
 .multa-monto {
-  color: var(--ion-color-danger);
+  color: #d32f2f;
   font-weight: 600;
+  font-size: 1.15rem;
 }
 
-.text-danger {
-  color: var(--ion-color-danger);
+.dias-retraso {
+  color: #1976d2;
+  font-weight: 500;
 }
-.text-success {
-  color: var(--ion-color-success);
+
+.estado-pagado {
+  color: #388e3c;
+}
+.estado-pendiente {
+  color: #d32f2f;
+}
+
+.empty-state {
+  color: #1976d2;
+  margin-top: 28px;
+}
+
+@media (max-width: 900px) {
+  .multas-card {
+    padding: 28px 12px 28px 12px;
+    min-width: unset;
+    max-width: 98vw;
+  }
+  .multas-title {
+    font-size: 20px;
+  }
+  .multas-toolbar {
+  --background: #fff;
+  --color: #1976d2;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(33,161,255,0.07);
+}
 }

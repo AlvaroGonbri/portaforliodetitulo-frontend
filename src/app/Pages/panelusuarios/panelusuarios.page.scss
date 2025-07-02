@@ -1,107 +1,83 @@
-.acciones-usuarios {
+.usuarios-bg {
+  --background: none;
+  background: linear-gradient(135deg, #21a1ff 60%, #fdbb2d 100%);
+  min-height: 100vh;
+}
+
+.usuarios-center {
   display: flex;
-  gap: 12px;
-  margin: 20px 16px 0 16px;
-  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding-top: 40px;
 }
 
-.tabla-usuarios-card {
-  margin: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(8px);
-}
-
-.tabla-usuarios-wrapper {
+.usuarios-card {
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  padding: 32px 28px 24px 28px;
+  min-width: 340px;
+  max-width: 95vw;
   width: 100%;
-  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-ion-toolbar, ion-header h1 {
-  color: #222 !important; /* O el color oscuro que prefieras */
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-/* Centra el título y oculta texto de botones en móviles */
-ion-title {
+.usuarios-title {
+  font-weight: bold;
+  color: #1976d2;
+  font-size: 24px;
+  margin-bottom: 18px;
+  letter-spacing: 1px;
   text-align: center;
-  width: 100%;
-  font-weight: 600;
-  color: #222;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.header-actions .btn-text {
-  display: inline;
+.usuarios-list {
+  background: #f5f8ff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px rgba(33,161,255,0.10);
+}
+
+.usuarios-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #e3f2fd;
+  font-size: 1.1em;
+  color: #222;
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.usuarios-btn {
+  font-weight: bold;
+  font-size: 16px;
+  background: #d32f2f;
+  --background: #d32f2f;
+  --background-hover: #b71c1c;
+  --background-activated: #b71c1c;
+  --background-focused: #b71c1c;
+  border-radius: 7px;
+  box-shadow: 0 2px 8px rgba(211,47,47,0.15);
+  margin-top: 12px;
+  color: #fff;
 }
 
 @media (max-width: 600px) {
-  .header-actions .btn-text {
-    display: none; /* Solo iconos en móviles */
-  }
-  ion-title {
-    font-size: 1.1em;
-  }
-}
-
-
-ion-button {
-  --color: #fff; /* Para texto blanco en botones de color */
-  font-weight: 500;
-}
-
-
-.tabla-usuarios {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 8px;
-  min-width: 600px;
-}
-
-.tabla-usuarios th, .tabla-usuarios td {
-  padding: 12px 20px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-@media (max-width: 700px) {
-  .tabla-usuarios {
+  .usuarios-card {
     min-width: 0;
-    width: 100%;
-    display: block;
+    padding: 12px 4px;
   }
-  .tabla-usuarios thead {
-    display: none;
+  .usuarios-title {
+    font-size: 18px;
   }
-  .tabla-usuarios tbody {
-    display: block;
-    width: 100%;
-  }
-  .tabla-usuarios tr {
-    display: block;
-    margin-bottom: 16px;
-    background: rgba(255,255,255,0.8);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  .tabla-usuarios td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 16px;
-    border-bottom: 1px solid #eee;
-    font-size: 0.98em;
-  }
-  .tabla-usuarios td:last-child {
-    border-bottom: none;
-  }
-  .tabla-usuarios td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #666;
-    margin-right: 8px;
-    min-width: 90px;
+  .usuarios-list {
+    padding: 8px;
   }
 }

@@ -1,80 +1,97 @@
-<ion-content class="custom-content">
-
-  <!-- Configuración de multa (monto por día) -->
-  <ion-card class="config-card">
-    <ion-card-header>
-      <ion-card-title>
-        <ion-icon name="cash-outline" slot="start" style="margin-right: 8px; color: #3880ff;"></ion-icon>
-        Modificar monto de Multa
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-item lines="none" class="input-item">
-        <ion-label position="floating">Monto actual multa por día</ion-label>
-        <ion-input
-          type="number"
-          [(ngModel)]="configuracion.montopordia"
-          min="0"
-          required
-          inputmode="decimal"
-          clearInput>
-        </ion-input>
-      </ion-item>
-      <ion-button expand="block" color="success" (click)="guardarConfiguracion()" class="save-btn">
-        <ion-icon slot="start" name="save"></ion-icon>
-        Guardar configuración
+<ion-header>
+  <ion-toolbar color="light" class="multas-toolbar">
+    <ion-title>
+      Multas y Configuración
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="irAHome()" color="medium" class="header-btn">
+        <ion-icon slot="icon-only" name="home"></ion-icon>
+        <span class="btn-text">Inicio</span>
       </ion-button>
-      <ion-text color="primary" *ngIf="mensaje">
-        <p class="mensaje">{{ mensaje }}</p>
-      </ion-text>
-    </ion-card-content>
-  </ion-card>
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
-    <ion-spinner name="crescent" color="primary"></ion-spinner>
-    <p class="loading-text">Cargando multas...</p>
+<ion-content class="multas-bg">
+  <div class="multas-center">
+    <div class="multas-card">
+
+      <!-- Configuración de multa (monto por día) -->
+      <div class="config-section">
+        <div class="config-title">
+          <ion-icon name="settings-outline" style="margin-right: 6px; color: #1976d2;"></ion-icon>
+          Modificar monto de Multa
+        </div>
+        <ion-item lines="none" class="login-input">
+          <ion-label position="floating">Monto actual multa por día</ion-label>
+          <ion-input
+            type="number"
+            [(ngModel)]="configuracion.montopordia"
+            min="0"
+            required
+            inputmode="decimal"
+            clearInput>
+          </ion-input>
+        </ion-item>
+        <ion-button expand="block" class="login-btn" (click)="guardarConfiguracion()">
+          <ion-icon slot="start" name="save"></ion-icon>
+          Guardar configuración
+        </ion-button>
+        <ion-text color="primary" *ngIf="mensaje">
+          <p class="mensaje">{{ mensaje }}</p>
+        </ion-text>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-container">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+        <p class="loading-text">Cargando multas...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="error-message">
+        <ion-icon name="warning-outline" color="danger" style="font-size: 2em;"></ion-icon>
+        <p>{{ error }}</p>
+        <ion-button color="warning" (click)="cargarMultas()">
+          <ion-icon name="refresh" slot="start"></ion-icon>
+          Reintentar
+        </ion-button>
+      </div>
+
+      <!-- Listado de multas -->
+      <ion-list *ngIf="!loading && !error && multas.length > 0" class="multas-list">
+        <ion-item-sliding *ngFor="let multa of multas">
+          <ion-item lines="full" class="multa-item">
+            <ion-avatar slot="start" class="avatar-multa">
+              <ion-icon [name]="multa.EstadoPago === 'pagado' ? 'checkmark-done-circle' : 'alert-circle-outline'" [color]="multa.EstadoPago === 'pagado' ? 'success' : 'warning'" style="font-size: 2em;"></ion-icon>
+            </ion-avatar>
+            <ion-label class="ion-text-wrap">
+              <h2 class="multa-nombre">Multa #{{ multa.MultaID }}</h2>
+              <p><strong>Técnico:</strong> {{ multa.AsignacionID?.tecnico_data?.nombre_completo }}</p>
+              <p><strong>Herramienta:</strong> {{ multa.AsignacionID?.producto_data?.nombre }}</p>
+              <p><strong>Días de retraso:</strong> <span class="dias-retraso">{{ multa.DiasRetraso }}</span></p>
+              <p><strong>Monto total:</strong> <span class="multa-monto">{{ multa.MontoTotal | currency }}</span></p>
+              <p>
+                <strong>Estado:</strong>
+                <ion-badge [color]="multa.EstadoPago === 'pagado' ? 'success' : 'warning'">
+                  {{ multa.EstadoPago | titlecase }}
+                </ion-badge>
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-item-sliding>
+      </ion-list>
+
+      <!-- Estado vacío -->
+      <div *ngIf="!loading && !error && multas.length === 0" class="empty-state">
+        <ion-icon name="checkmark-circle-outline" color="success" style="font-size: 3em;"></ion-icon>
+        <p>No hay multas registradas</p>
+      </div>
+
+    </div>
   </div>
-
-  <!-- Error State -->
-  <div *ngIf="error" class="error-message">
-    <ion-icon name="warning-outline" color="danger" style="font-size: 2em;"></ion-icon>
-    <p>{{ error }}</p>
-    <ion-button color="warning" (click)="cargarMultas()">
-      <ion-icon name="refresh" slot="start"></ion-icon>
-      Reintentar
-    </ion-button>
-  </div>
-
-  <!-- Listado de multas -->
-  <ion-list *ngIf="!loading && !error" class="multas-list">
-    <ion-item-sliding *ngFor="let multa of multas">
-      <ion-item lines="full" class="multa-item">
-        <ion-avatar slot="start" class="avatar-multa">
-          <ion-icon [name]="multa.EstadoPago === 'pagado' ? 'checkmark-done-circle' : 'alert-circle-outline'" [color]="multa.EstadoPago === 'pagado' ? 'success' : 'warning'" style="font-size: 2em;"></ion-icon>
-        </ion-avatar>
-        <ion-label class="ion-text-wrap">
-          <h2 class="multa-id">Multa #{{ multa.MultaID }}</h2>
-          <p><strong>Técnico:</strong> {{ multa.AsignacionID?.tecnico_data?.nombre_completo }}</p>
-          <p><strong>Herramienta:</strong> {{ multa.AsignacionID?.producto_data?.nombre }}</p>
-          <p><strong>Días de retraso:</strong> <span class="dias-retraso">{{ multa.DiasRetraso }}</span></p>
-          <p><strong>Monto total:</strong> <span class="monto-total">{{ multa.MontoTotal | currency }}</span></p>
-          <p [ngClass]="{'estado-pendiente': multa.EstadoPago === 'pendiente', 
-                        'estado-pagado': multa.EstadoPago === 'pagado'}">
-            <strong>Estado:</strong>
-            <ion-badge [color]="multa.EstadoPago === 'pagado' ? 'success' : 'warning'">
-              {{ multa.EstadoPago | titlecase }}
-            </ion-badge>
-          </p>
-        </ion-label>
-      </ion-item>
-    </ion-item-sliding>
-  </ion-list>
-
-  <!-- Estado vacío -->
-  <div *ngIf="!loading && !error && multas.length === 0" class="empty-state">
-    <ion-icon name="checkmark-circle-outline" color="success" style="font-size: 3em;"></ion-icon>
-    <p>No hay multas registradas</p>
-  </div>
-
 </ion-content>

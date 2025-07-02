@@ -1,64 +1,58 @@
 <ion-header>
-  <ion-toolbar mode="ios">
+  <ion-toolbar color="light" class="multas-toolbar">
     <ion-title>
-      Panel de usuarios
+      Gestión de Usuarios
     </ion-title>
-    <ion-buttons slot="end" class="header-actions">
+    <ion-buttons slot="end">
       <ion-button (click)="irAHome()" color="medium" class="header-btn">
         <ion-icon slot="icon-only" name="home"></ion-icon>
         <span class="btn-text">Inicio</span>
       </ion-button>
-      <ion-button (click)="logout()" color="danger" class="header-btn">
-        <ion-icon slot="icon-only" name="log-out"></ion-icon>
-        <span class="btn-text">Cerrar sesión</span>
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        Cerrar sesión
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <!-- Acciones principales -->
-  <div class="acciones-usuarios">
-    <ion-button class="btn-crear" (click)="crearUsuario()" color="primary">
-      <ion-icon slot="start" name="add"></ion-icon>
-      Crear usuario
-    </ion-button>
-    <ion-button (click)="actualizarUsuarios()" color="success">
-      <ion-icon slot="start" name="refresh"></ion-icon>
-      Actualizar
-    </ion-button>
-  </div>
+<div class="usuarios-bg">
+  <div class="usuarios-center">
+    <div class="usuarios-card">
 
-  <!-- Tabla responsiva de usuarios -->
-  <ion-card class="tabla-usuarios-card">
-    <ion-card-content>
-      <div class="tabla-usuarios-wrapper">
-        <table class="tabla-usuarios">
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of items; trackBy: trackById">
-              <td data-label="Usuario">{{ item.username }} {{ item.last_name }}</td>
-              <td data-label="Email">{{ item.email }}</td>
-              <td data-label="Rol">{{ getRolesNames(item.groups) }}</td>
-              <td data-label="Acciones" style="text-align: center;">
-                <ion-button (click)="editarUsuario(item)" color="warning" size="small">
-                  <ion-icon name="create"></ion-icon>
-                </ion-button>
-                <ion-button (click)="eliminarUsuario(item.id)" color="danger" size="small" style="margin-left: 8px;">
-                  <ion-icon name="trash"></ion-icon>
-                </ion-button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; margin-bottom: 18px;">
+        <ion-button class="usuarios-btn" (click)="crearUsuario()" color="primary">
+          <ion-icon slot="start" name="add"></ion-icon>
+          Crear usuario
+        </ion-button>
+        <ion-button class="usuarios-btn" (click)="actualizarUsuarios()" color="success">
+          <ion-icon slot="start" name="refresh"></ion-icon>
+          Actualizar
+        </ion-button>
       </div>
-    </ion-card-content>
-  </ion-card>
-</ion-content>
+
+      <h2 class="usuarios-title">Lista de Usuarios</h2>
+
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="filtrarUsuarios()"
+        placeholder="Buscar por nombre, email o rol..." debounce="300" style="margin-bottom: 18px;">
+      </ion-searchbar>
+
+      <div class="usuarios-list">
+        <div *ngFor="let item of usuariosFiltrados; trackBy: trackById" class="usuarios-item">
+          <div style="flex: 1;">
+            <div style="font-weight: bold;">{{ item.username }} {{ item.last_name }}</div>
+            <div style="font-size: 14px; color: #555;">
+              <div>Email: {{ item.email }}</div>
+              <div>Rol: {{ getRolesNames(item.groups) }}</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: row; gap: 4px; margin-left: 12px;">
+            <ion-button (click)="editarUsuario(item)" fill="clear" color="warning" size="small">
+              <ion-icon name="create"></ion-icon>
+            </ion-button>
+            <ion-button (click)="eliminarUsuario(item.id)" fill="clear" color="danger" size="small">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>

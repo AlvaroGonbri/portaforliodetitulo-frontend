@@ -1,6 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="custom-toolbar">
     <ion-title>¡Bienvenido!</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" color="danger">
+        <ion-icon slot="start" name="log-out"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -12,3 +18,7 @@
     </ion-item>
   </ion-list>
 </ion-content>
+
+
+
+

@@ -18,6 +18,8 @@ export class PanelusuariosPage implements OnInit {
 
   items: users[] = [];
   grupos: groups[] = [];
+  searchTerm: string = '';
+  usuariosFiltrados: users[] = [];
 
   getRolesNames(groups: { id: number, name: string }[]): string {
     if (!groups || groups.length === 0) return '-';
@@ -44,12 +46,14 @@ export class PanelusuariosPage implements OnInit {
     const usuarios = localStorage.getItem('usuarios');
     if (usuarios) {
       this.items = JSON.parse(usuarios);
+      this.filtrarUsuarios();
       console.log('Usuarios cargados desde LocalStorage');
     } else {
       this.servicioAPI.getusers().subscribe({
         next: (usuarios) => {
           this.items = usuarios;
           localStorage.setItem('usuarios', JSON.stringify(this.items));
+          this.filtrarUsuarios();
           console.log('Usuarios cargados desde API');
         },
         error: (err) => {
@@ -119,6 +123,7 @@ export class PanelusuariosPage implements OnInit {
               next: () => {
                 // Elimina el usuario de la lista local
                 this.items = this.items.filter(u => u.id !== id);
+                this.filtrarUsuarios();
                 // Opcional: actualiza localStorage
                 localStorage.setItem('usuarios', JSON.stringify(this.items));
               },
@@ -150,6 +155,7 @@ export class PanelusuariosPage implements OnInit {
       if (idx !== -1) {
         this.items[idx] = { ...this.items[idx], ...data };
         localStorage.setItem('usuarios', JSON.stringify(this.items));
+        this.filtrarUsuarios();
       }
       // Mostrar toast de éxito
       const toast = await this.toastController.create({
@@ -160,5 +166,14 @@ export class PanelusuariosPage implements OnInit {
       });
       await toast.present();
     }
+  }
+
+  filtrarUsuarios() {
+    const term = this.searchTerm?.toLowerCase() || '';
+    this.usuariosFiltrados = this.items.filter(item =>
+      (item.username + ' ' + item.last_name).toLowerCase().includes(term) ||
+      item.email.toLowerCase().includes(term) ||
+      this.getRolesNames(item.groups).toLowerCase().includes(term)
+    );
   }
 }

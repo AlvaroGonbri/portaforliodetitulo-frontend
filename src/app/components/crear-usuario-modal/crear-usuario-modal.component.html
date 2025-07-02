@@ -2,7 +2,10 @@
   <ion-toolbar>
     <ion-title>Crear/Editar usuario</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">Cerrar</ion-button>
+      <ion-button (click)="dismiss()" color="danger">
+        <ion-icon slot="start" name="close"></ion-icon>
+        Cancelar
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>

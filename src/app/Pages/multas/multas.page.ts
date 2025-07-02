@@ -17,7 +17,6 @@ export class MultasPage implements OnInit {
   configuracion: any = { montopordia: 0 };
   mensaje: string | null = null;
 
-
   constructor(private apiService: APIService, private router: Router) { }
 
   ngOnInit() {
@@ -56,17 +55,16 @@ export class MultasPage implements OnInit {
 
   exportarMultasAExcel() {
     // Lógica para exportar multas a Excel
-    // Puedes usar una librería como xlsx o simplemente descargar un CSV
     alert('Funcionalidad de exportar a Excel aún no implementada.');
   }
 
   verDetalleMulta(multa: Multa) {
-    // Lógica para mostrar detalles de la multa (puede ser un modal o navegación)
+    // Lógica para mostrar detalles de la multa
     alert('Detalle de multa: ' + JSON.stringify(multa, null, 2));
   }
 
   marcarComoPagada(multa: Multa) {
-    // Lógica para marcar la multa como pagada (puede ser una petición al backend)
+    // Lógica para marcar la multa como pagada
     alert('Funcionalidad para marcar como pagada aún no implementada.');
   }
 
@@ -77,9 +75,16 @@ export class MultasPage implements OnInit {
     return this.multas.filter(m =>
       m.AsignacionID.tecnico_data.nombre_completo.toLowerCase().includes(term) ||
       m.AsignacionID.producto_data.nombre.toLowerCase().includes(term)
-
-
-
     );
+  }
+
+  irAHome() {
+    this.router.navigate(['/home']);
+  }
+
+  logout() {
+    // Limpia la sesión/token según tu lógica
+    localStorage.clear();
+    this.router.navigate(['/home']);
   }
 }

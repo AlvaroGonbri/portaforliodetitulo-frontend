@@ -21,4 +21,10 @@ export class HomePage implements OnInit {
     const userRoles = JSON.parse(localStorage.getItem('roles') || '[]');
     this.userPages = this.menuService.getUserPages(userRoles);
   }
+
+  logout() {
+    this.authService.logout(); // Llama al método de logout de tu servicio
+    // Redirige al login (ajusta según tu app)
+    window.location.href = '/login';
+  }
 }

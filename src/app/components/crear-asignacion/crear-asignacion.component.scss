@@ -1,3 +1,53 @@
+// ...existing code...
+
+:host {
+  color: #111;
+}
+
+ion-label,
+ion-card-title,
+ion-card-subtitle,
+ion-card-content,
+ion-item,
+ion-input,
+ion-textarea,
+ion-searchbar,
+ion-note,
+ion-list,
+ion-chip,
+ion-text,
+ion-button,
+ion-title {
+  color: #111 !important;
+}
+
+ion-input, ion-textarea {
+  --color: #111;
+}
+
+ion-searchbar {
+  --color: #111;
+  --placeholder-color: #444;
+}
+
+.selected-item,
+.summary-card {
+  color: #111;
+}
+
+ion-icon {
+  color: inherit;
+}
+
+.selected {
+  background: #80d5f7 !important;
+  color: #111 !important;
+}
+
+.selected * {
+  color: #111 !important;
+}
+
 .selection-card {
   margin-bottom: 16px;
 }
@@ -12,7 +62,7 @@
 .selected-item {
   margin-top: 16px;
   border: 2px solid var(--ion-color-primary);
-  --background: #9ae765;
+  --background: #80d5f7;
 }
 
 .summary-card {
@@ -31,7 +81,7 @@
 }
 
 ion-item.selected {
-  --background: #9ae765;
+  --background: #80d5f7;
   --color: var(--ion-color-primary-contrast);
   border-left: 4px solid var(--ion-color-primary);
 }
@@ -48,7 +98,7 @@ ion-item.selected {
   height: 24px;
   border-radius: 50%;
   background: var(--ion-color-primary);
-  color: white;
+  color: #80d5f7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,4 +130,14 @@ ion-chip {
 .error-message {
   background: var(--ion-color-danger-tint);
   color: var(--ion-color-danger);
+}
+
+.summary-card {
+  background: #80d5f7 !important;
+  border-radius: 18px;
+}
+
+.summary-card ion-card-header,
+.summary-card ion-card-content {
+  background: transparent !important;
 }

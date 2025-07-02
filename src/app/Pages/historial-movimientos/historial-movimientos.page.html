@@ -1,26 +1,26 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="light" class="multas-toolbar">
     <ion-title>
-      <h1 style="margin: 0;">📋 Historial de Movimientos</h1>
+      Historial de Movimientos
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="exportarHistorial()" color="success">
-        <ion-icon slot="start" name="download"></ion-icon>
-        Exportar
+      <ion-button (click)="irAHome()" color="medium" class="header-btn">
+        <ion-icon slot="icon-only" name="home"></ion-icon>
+        <span class="btn-text">Inicio</span>
       </ion-button>
       <ion-button (click)="logout()" color="danger">
         <ion-icon slot="start" name="log-out"></ion-icon>
         Cerrar sesión
-      </ion-button>
-      <ion-button (click)="irAHome()" color="medium" class="header-btn">
-        <ion-icon slot="icon-only" name="home"></ion-icon>
-        <span class="btn-text">Inicio</span>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+        <ion-button (click)="exportarHistorial()" color="success">
+        <ion-icon slot="start" name="download"></ion-icon>
+        Exportar
+      </ion-button>
   <!-- Filtros de búsqueda -->
   <ion-card style="margin: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.2); background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);">
     <ion-card-header>

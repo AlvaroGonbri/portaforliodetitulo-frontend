@@ -1,5 +1,7 @@
 ion-content {
-  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --background: none;
+  background: linear-gradient(135deg, #21a1ff 60%, #fdbb2d 100%);
+  color: #111 !important;
 }
 
 .welcome-card {
@@ -32,11 +34,50 @@ ion-content {
 .menu-icon {
   font-size: 48px;
   margin-bottom: 10px;
-  color: #667eea;
+  color: #111 !important;
 }
 
 .menu-title {
   font-weight: 600;
-  color: #333;
+  color: #111 !important;
   margin: 0;
 }
+
+/* Fuerza el color negro en tablas, tarjetas y elementos de texto */
+th,
+td,
+table,
+ion-card-title,
+ion-card-content,
+ion-label,
+ion-input,
+ion-select,
+ion-datetime,
+ion-item,
+ion-row,
+ion-col,
+div,
+span,
+p,
+h1, h2, h3, h4, h5, h6 {
+  color: #111 !important;
+}
+
+ion-badge {
+  color: #111 !important;
+  --color: #111 !important;
+  background: #e0e0e0 !important;
+}
+
+ion-button {
+  color: #111 !important;
+}
+
+ion-input, ion-select, ion-datetime {
+  --color: #111 !important;
+}
+
+::-webkit-input-placeholder { color: #111 !important; }
+::-moz-placeholder { color: #111 !important; }
+:-ms-input-placeholder { color: #111 !important; }
+::placeholder { color: #111 !important; }

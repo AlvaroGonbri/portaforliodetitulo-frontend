@@ -2,34 +2,35 @@
   <div class="login-center">
     <div class="login-card">
       <div class="login-avatar">
-        <ion-icon name="person" size="large"></ion-icon>
+        <img src="assets/icon/gasf.png" alt="Gasfitería">
+        <h2 class="login-title">GASFITERÍA</h2>
       </div>
       <form #form="ngForm" (ngSubmit)="login(form)">
         <ion-item lines="none" class="login-input">
-          <ion-icon name="person" slot="start"></ion-icon>
+          <ion-label position="stacked">Usuario</ion-label>
           <ion-input
             name="username"
             type="text"
             required
             ngModel
             autocomplete="username"
-            placeholder="Email ID"
+            placeholder="Usuario"
           ></ion-input>
         </ion-item>
         <ion-item lines="none" class="login-input">
-          <ion-icon name="lock-closed" slot="start"></ion-icon>
+          <ion-label position="stacked">Contraseña</ion-label>
           <ion-input
             name="password"
             type="password"
             required
             ngModel
             autocomplete="current-password"
-            placeholder="Password"
+            placeholder="Contraseña"
           ></ion-input>
         </ion-item>
         <div class="login-options">
           <ion-checkbox name="remember" ngModel></ion-checkbox>
-          <span class="remember-text">Remember me</span>
+          <span class="remember-text">Recuérdame</span>
         </div>
         <ion-button
           expand="block"
@@ -38,9 +39,9 @@
           color="danger"
           class="login-btn"
         >
-          LOGIN
+          INICIAR SESIÓN
         </ion-button>
-        <div *ngIf="errorMessage" class="ion-text-center" style="color: red; margin-top: 12px;">
+        <div *ngIf="errorMessage" class="ion-text-center error-message">
           {{ errorMessage }}
         </div>
       </form>

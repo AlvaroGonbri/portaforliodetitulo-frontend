@@ -2,14 +2,17 @@
   <ion-toolbar>
     <ion-title>Editar Producto</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">Cancelar</ion-button>
+      <ion-button (click)="dismiss()" color="danger">
+        <ion-icon slot="start" name="close"></ion-icon>
+        Cancelar
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <form (ngSubmit)="guardarProducto()">
-        <ion-item>
+    <ion-item>
       <ion-label position="floating">Código de material</ion-label>
       <ion-input [(ngModel)]="productoForm.cod_material" name="cod_material" type="number" required></ion-input>
     </ion-item>
@@ -40,16 +43,16 @@
     </ion-item>
 
     <ion-item *ngIf="tipos">
-  <ion-label>Tipo</ion-label>
-  <ion-select [(ngModel)]="productoForm.tipo.id" name="tipo" required>
-    <ion-select-option *ngFor="let t of tipos" [value]="t.id">
-      {{ t.nombre }}
-    </ion-select-option>
-  </ion-select>
-</ion-item>
-<ion-note *ngIf="tipos && !productoForm.tipo?.id && formSubmitted" color="danger">
-  Este campo es obligatorio
-</ion-note>
+      <ion-label>Tipo</ion-label>
+      <ion-select [(ngModel)]="productoForm.tipo.id" name="tipo" required>
+        <ion-select-option *ngFor="let t of tipos" [value]="t.id">
+          {{ t.nombre }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-note *ngIf="tipos && !productoForm.tipo?.id && formSubmitted" color="danger">
+      Este campo es obligatorio
+    </ion-note>
 
     <!-- Si tienes un listado de categorías para seleccionar -->
     <ion-item *ngIf="categorias">

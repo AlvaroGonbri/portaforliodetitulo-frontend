@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="light" class="multas-toolbar">
     <ion-title>
       Gestión de Inventario
     </ion-title>
@@ -16,57 +16,61 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
-    <ion-button expand="block" color="success" (click)="exportarAExcel()" style="margin: 8px 16px;">
-      <ion-icon slot="start" name="download"></ion-icon>
-      Exportar a Excel
-    </ion-button>
+<div class="inventario-bg">
+  <div class="inventario-center">
+    <div class="inventario-card">
 
-    <ion-button (click)="crearProducto()" expand="block" color="primary" style="margin: 8px 16px;">
-      <ion-icon slot="start" name="add-circle"></ion-icon>
-      Crear producto
-    </ion-button>
+      <div style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; margin-bottom: 12px;">
+        <ion-button (click)="crearProducto()" color="primary" class="inventario-btn" size="default">
+          <ion-icon slot="start" name="add-circle"></ion-icon>
+          Crear producto
+        </ion-button>
+        <ion-button (click)="exportarAExcel()" color="success" class="inventario-btn" size="default">
+          <ion-icon slot="start" name="download"></ion-icon>
+          Exportar a Excel
+        </ion-button>
+      </div>
 
-    <ion-searchbar 
-      [(ngModel)]="searchTerm" 
-      placeholder="Buscar productos..." 
-      debounce="300"
-      style="margin: 8px 16px;">
-    </ion-searchbar>
+      <h2 class="inventario-title">Lista de Productos</h2>
+      <ion-searchbar [(ngModel)]="searchTerm" placeholder="Buscar productos..." debounce="300" style="margin: 16px 0;">
+      </ion-searchbar>
 
-    <ion-item *ngFor="let producto of productosFiltrados">
-      <ion-label>
-        <div class="producto-header">
-          <h2 class="producto-nombre">{{ producto.nom_producto }}</h2>
-          <ion-badge *ngIf="producto.alerta === 'bajo'" color="danger">
-            <ion-icon name="alert-circle" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
-            Stock Bajo
-          </ion-badge>
-          <ion-badge *ngIf="producto.alerta === 'sobre'" color="warning">
-            <ion-icon name="trending-up" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
-            Sobrestock
-          </ion-badge>
+      <div class="inventario-list">
+        <div *ngFor="let producto of productosFiltrados" class="inventario-item">
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center;">
+              <span class="producto-nombre" style="font-weight: bold;">{{ producto.nom_producto }}</span>
+              <ion-badge *ngIf="producto.alerta === 'bajo'" color="danger" style="margin-left: 8px;">
+                <ion-icon name="alert-circle" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                Stock Bajo
+              </ion-badge>
+              <ion-badge *ngIf="producto.alerta === 'sobre'" color="warning" style="margin-left: 8px;">
+                <ion-icon name="trending-up" style="vertical-align: middle; margin-right: 4px;"></ion-icon>
+                Sobrestock
+              </ion-badge>
+            </div>
+            <div style="font-size: 14px; color: #555;">
+              <div>Código: {{ producto.cod_material }}</div>
+              <div>Stock: {{ producto.cant_existencia }} / {{ producto.stock_maximo }}</div>
+              <div>Categoría: {{ producto.categoria.nom_categoria }}</div>
+              <div>Tipo: {{ producto.tipo_nombre }}</div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-left: 12px;">
+            <ion-button (click)="editarProducto(producto)" fill="clear" color="primary" size="small">
+              <ion-icon name="create"></ion-icon>
+            </ion-button>
+            <ion-button color="danger" fill="clear" (click)="confirmarEliminacion(producto.id)" size="small">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </div>
         </div>
-        <p>Código: {{ producto.cod_material }}</p>
-        <p>Stock: {{ producto.cant_existencia }} / {{ producto.stock_maximo }}</p>
-        <p>Categoría: {{ producto.categoria.nom_categoria }}</p>
-        <p>Tipo: {{ producto.tipo_nombre }}</p>
-      </ion-label>
-      <ion-button (click)="editarProducto(producto)" slot="end" fill="clear" color="primary">
-        <ion-icon name="create"></ion-icon>
-      </ion-button>
-      <ion-button color="danger" slot="end" fill="clear" (click)="confirmarEliminacion(producto.id)">
-        <ion-icon name="trash"></ion-icon>
-      </ion-button>
-    </ion-item>
+      </div>
 
-    <ion-alert
-      [isOpen]="mostrarAlerta"
-      header="¿Desea confirmar la eliminación?"
-      message="¿Está seguro que desea eliminar este producto?"
-      [buttons]="alertButtons"
-      (didDismiss)="mostrarAlerta = false">
-    </ion-alert>
-  </ion-list>
-</ion-content>
+      <ion-alert [isOpen]="mostrarAlerta" header="¿Desea confirmar la eliminación?"
+        message="¿Está seguro que desea eliminar este producto?" [buttons]="alertButtons"
+        (didDismiss)="mostrarAlerta = false">
+      </ion-alert>
+    </div>
+  </div>
+</div>
